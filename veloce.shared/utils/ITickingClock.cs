@@ -6,7 +6,7 @@ namespace veloce.shared.utils;
 /// <summary>
 /// Represents an object for ticking.
 /// </summary>
-public interface ITickerClock
+public interface ITickingClock
 {
     /// <summary>
     /// Event fired whenever the clock ticks.

@@ -1,7 +1,7 @@
-﻿using System.Security.Cryptography;
-using ProtoBuf.Meta;
+﻿using ProtoBuf.Meta;
+using veloce.shared.utils;
 
-namespace veloce.shared.utils;
+namespace veloce.shared.handlers;
 
 public abstract class AbstractPacketHandler : IPacketHandler
 {

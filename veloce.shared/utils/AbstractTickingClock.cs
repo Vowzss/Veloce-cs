@@ -3,7 +3,7 @@ using veloce.shared.events;
 
 namespace veloce.shared.utils;
 
-public abstract class AbstractTickingClock : ITickerClock
+public abstract class AbstractTickingClock : ITickingClock
 {
     public TickEvent? OnTick { get; set; }
     public TickMissedEvent? OnTickMissed { get; set; }

@@ -3,24 +3,26 @@ using System.Net;
 using System.Net.Sockets;
 using veloce.shared.enums;
 using veloce.shared.events;
-using veloce.shared.events.server;
+using veloce.shared.handlers;
+using veloce.shared.interceptors.server;
 using veloce.shared.models;
 using veloce.shared.utils;
 
 namespace veloce.shared.channels.server;
 
-public abstract class AbstractServerChannel : AbstractChannel, IServerChannel
+public abstract class AbstractServerChannel : AbstractChannel<IServerPacketInterceptor>, IServerChannel
 {
     public IServerConfig Config { get; }
     
     public ServerState State { get; protected set; } = ServerState.Unknown;
     public ServerStatus Status { get; protected set; } = ServerStatus.Unknown;
-    
+    public required IServerSessionHandler SessionHandler { get; init; }
+
     public TickEvent? OnTick { get; protected set; }
     public TickMissedEvent? OnTickMissed { get; protected set; }
     
     private readonly CancellationToken _token;
-    private readonly ITickerClock _clock;
+    private readonly ITickingClock _clock;
     
     private readonly SemaphoreSlim _semaphore;
     private readonly ConcurrentQueue<UdpReceiveResult> _queue;
@@ -96,16 +98,17 @@ public abstract class AbstractServerChannel : AbstractChannel, IServerChannel
             }
             catch (OperationCanceledException)
             {
-                Logger.Warning("Listen task was cancelled.");
+                throw;
             }
             catch (Exception ex)
             {
-                Logger.Error("An error occured while listening from transport.", ex);
+                Logger.Error(ex, "An error occured while listening from transport.");
             }
             
             await Task.Delay(1, _token);
         }
     }
+
 
     public override async Task Process()
     {
@@ -116,7 +119,10 @@ public abstract class AbstractServerChannel : AbstractChannel, IServerChannel
             try
             {
                 while (_queue.TryDequeue(out var rs))
-                    OnDataReceived?.Invoke(rs.Buffer);
+                {
+                    var session = SessionHandler.Get(rs.RemoteEndPoint);
+                    PacketInterceptor.Accept(rs.Buffer, session?.Encryption);
+                }
             }
             finally
             {
@@ -124,5 +130,12 @@ public abstract class AbstractServerChannel : AbstractChannel, IServerChannel
                 await Task.Delay(1, _token);
             }
         }
+    }
+}
+
+public sealed class DefaultServerChannel : AbstractServerChannel
+{
+    public DefaultServerChannel(IPEndPoint endPoint, IServerConfig config) : base(endPoint, config)
+    {
     }
 }

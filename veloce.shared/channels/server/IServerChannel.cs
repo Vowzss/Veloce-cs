@@ -1,5 +1,7 @@
 ﻿using veloce.shared.enums;
 using veloce.shared.events;
+using veloce.shared.handlers;
+using veloce.shared.interceptors.server;
 using veloce.shared.models;
 
 namespace veloce.shared.channels.server;
@@ -7,22 +9,27 @@ namespace veloce.shared.channels.server;
 /// <summary>
 /// Represents a channel object designed for server communication.
 /// </summary>
-public interface IServerChannel : IChannel
+public interface IServerChannel : IChannel<IServerPacketInterceptor>
 {
     /// <summary>
-    /// Represents the server's configuration.
+    /// Represents the object for configuration.
     /// </summary>
     protected IServerConfig Config { get; }
     
     /// <summary>
-    /// Represents the game's logical state.
+    /// Represents the object for game's logical state.
     /// </summary>
     protected ServerState State { get; }
     
     /// <summary>
-    /// Represents the server's operational status.
+    /// Represents the object for server's operational status.
     /// </summary>
     protected ServerStatus Status { get; }
+    
+    /// <summary>
+    /// Represents the object for client session handler.
+    /// </summary>
+    protected IServerSessionHandler SessionHandler { get; }
     
     /// <summary>
     /// Event fired whenever the server ticks.

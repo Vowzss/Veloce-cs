@@ -1,4 +1,5 @@
 ﻿using veloce.shared.events;
+using veloce.shared.handlers;
 using veloce.shared.models;
 using veloce.shared.packets;
 using veloce.shared.utils;
@@ -28,7 +29,7 @@ public interface IPacketInterceptor
     /// <summary>
     /// Non-blocking method to resolve packet from data.
     /// </summary>
-    public void Accept(byte[] data, EncryptionContext encryption);
+    public void Accept(byte[] data, EncryptionContext? encryption);
     
     /// <summary>
     /// Non-blocking method to process custom packets.

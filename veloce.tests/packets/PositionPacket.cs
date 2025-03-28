@@ -20,8 +20,6 @@ public abstract class AbstractPositionPacket : AbstractGamePacket, IPositionPack
     // Protobuf serialization
     protected AbstractPositionPacket() : base() { }
     
-    
-    
     public override string ToString()
     {
         return $"{base.ToString()} - Position: [X:{X}, Y:{Y}, Z:{Z}]";

@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using Serilog;
 using veloce.shared.events;
+using veloce.shared.handlers;
+using veloce.shared.interceptors;
 using veloce.shared.utils;
 
 namespace veloce.shared.channels;
@@ -8,7 +10,8 @@ namespace veloce.shared.channels;
 /// <summary>
 /// Represents a wrapper around the socket interface.
 /// </summary>
-public interface IChannel
+public interface IChannel<out TPacketInterceptor>
+    where TPacketInterceptor : IPacketInterceptor
 {
     /// <summary>
     /// Represents a logger for debug purposes.
@@ -37,10 +40,14 @@ public interface IChannel
     protected IPacketSerializer Serializer { get; }
     
     /// <summary>
-    /// Event fired when data is received from transport.
+    /// Represents the object for packet deserialization
     /// </summary>
-    /// <remarks>The data is always provided in <c>byte[]</c>.</remarks>
-    public DataReceiveEvent? OnDataReceived { get; }
+    protected IPacketDeserializer Deserializer { get; }
+    
+    /// <summary>
+    /// Represents the interceptor object for packet processing.
+    /// </summary>
+    public TPacketInterceptor PacketInterceptor { get; }
 
     /// <summary>
     /// Non-blocking method to process received data.

@@ -1,5 +1,6 @@
 ﻿using veloce.shared.events;
 using veloce.shared.events.server;
+using veloce.shared.handlers;
 using veloce.shared.models;
 using veloce.shared.packets;
 using veloce.shared.utils;
@@ -25,7 +26,7 @@ public abstract class AbstractServerPacketInterceptor: IServerPacketInterceptor
     }
     
     // TODO: handle when encryption context not set yet when no handshake done first
-    public void Accept(byte[] data, EncryptionContext encryption)
+    public void Accept(byte[] data, EncryptionContext? encryption)
     {
         // Deserialize packet
         var packet = Deserializer.Read(data, encryption);
@@ -62,6 +63,13 @@ public abstract class AbstractServerPacketInterceptor: IServerPacketInterceptor
                 return;
         }
     }
-    
-    public abstract void Handle(IPacket packet);
+
+    public virtual void Handle(IPacket packet) { }
+}
+
+public sealed class DefaultServerPacketInterceptor : AbstractServerPacketInterceptor
+{
+    public DefaultServerPacketInterceptor(IPacketDeserializer deserializer) : base(ref deserializer)
+    {
+    }
 }

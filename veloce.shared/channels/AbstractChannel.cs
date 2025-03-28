@@ -2,11 +2,15 @@
 using System.Net.Sockets;
 using Serilog;
 using veloce.shared.events;
+using veloce.shared.handlers;
+using veloce.shared.interceptors;
+using veloce.shared.packets;
 using veloce.shared.utils;
 
 namespace veloce.shared.channels;
 
-public abstract class AbstractChannel : IChannel
+public abstract class AbstractChannel<TPacketInterceptor> : IChannel<TPacketInterceptor>
+    where TPacketInterceptor : IPacketInterceptor
 {
     public ILogger Logger { get; }
     
@@ -14,10 +18,12 @@ public abstract class AbstractChannel : IChannel
     public IPEndPoint EndPoint { get; }
     
     public CancellationTokenSource Signal { get; }
-    public IPacketSerializer Serializer { get; }
     
-    public DataReceiveEvent? OnDataReceived { get; set; }
-
+    public IPacketSerializer Serializer { get; init; }
+    public IPacketDeserializer Deserializer { get; init; }
+    
+    public required TPacketInterceptor PacketInterceptor { get; init;  }
+    
     protected UdpClient Transport { get; }
     
     protected AbstractChannel(IPEndPoint endPoint, bool hasAuthority = false)

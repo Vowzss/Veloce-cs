@@ -1,5 +1,6 @@
 ﻿using veloce.shared.events;
 using veloce.shared.events.client;
+using veloce.shared.handlers;
 using veloce.shared.models;
 using veloce.shared.packets;
 using veloce.shared.utils;
@@ -15,12 +16,12 @@ public abstract class AbstractClientPacketInterceptor : IClientPacketInterceptor
 
     public PingEvent? OnPing { get; set; }
     
-    protected AbstractClientPacketInterceptor(IPacketDeserializer deserializer)
+    protected AbstractClientPacketInterceptor(ref IPacketDeserializer deserializer)
     {
         Deserializer = deserializer;
     }
 
-    public void Accept(byte[] data, EncryptionContext encryption)
+    public void Accept(byte[] data, EncryptionContext? encryption)
     {
         // Deserialize packet
         var packet = Deserializer.Read(data, encryption);
@@ -38,5 +39,12 @@ public abstract class AbstractClientPacketInterceptor : IClientPacketInterceptor
         }
     }
 
-    public abstract void Handle(IPacket packet);
+    public virtual void Handle(IPacket packet) { }
+}
+
+public sealed class DefaultClientPacketInterceptor : AbstractClientPacketInterceptor
+{
+    public DefaultClientPacketInterceptor(IPacketDeserializer deserializer) : base(ref deserializer)
+    {
+    }
 }
