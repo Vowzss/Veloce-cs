@@ -13,6 +13,8 @@ public static class Program
         AbstractPacketHandler.RegisterPacketType<AbstractGamePacket, AbstractPositionPacket>();
         AbstractPacketHandler.RegisterPacketType<AbstractPositionPacket, PositionPacket>();
         
-        new PacketLostTest().Execute().Wait();
+        AbstractPacketHandler.RegisterPacketType<AbstractFirstHandshakePacket, FirstHandshakePacket>();
+        
+        new HandshakeTest().Execute().Wait();
     }
 }

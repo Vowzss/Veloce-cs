@@ -11,14 +11,14 @@ public abstract class AbstractServerPacketInterceptor: IServerPacketInterceptor
 {
     public IPacketDeserializer Deserializer { get; }
     
-    public FirstHandshakeEvent? OnFirstHandshake { get; set; }
-    public SecondHandshakeEvent? OnSecondHandshake { get; set; }
+    public FirstHandshakeEvent? OnFirstHandshake { get; init; }
+    public SecondHandshakeEvent? OnSecondHandshake { get; init; }
 
-    public ConnectEvent? OnConnect { get; set; }
-    public DisconnectEvent? OnDisconnect { get; set; }
-    public ReconnectEvent? OnReconnect { get; set; }
+    public ConnectEvent? OnConnect { get; init; }
+    public DisconnectEvent? OnDisconnect { get; init; }
+    public ReconnectEvent? OnReconnect { get; init; }
     
-    public PongEvent? OnPong { get; set; }
+    public PongEvent? OnPong { get; init; }
     
     protected AbstractServerPacketInterceptor(ref IPacketDeserializer deserializer)
     {

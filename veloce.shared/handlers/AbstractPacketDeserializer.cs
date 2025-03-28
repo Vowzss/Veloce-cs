@@ -15,7 +15,7 @@ public abstract class AbstractPacketDeserializer : AbstractPacketSerializer, IPa
         // Case when packets cannot be secured
         // e.g. during handshake
         if (encryption is null)
-            return Registry.Deserialize<AbstractGamePacket>(new ReadOnlyMemory<byte>(data));
+            return Registry.Deserialize<AbstractPacket>(new ReadOnlyMemory<byte>(data));
         
         // Load aes iv from serialized data for deserialization
         encryption.Value.LoadIv(data);
@@ -30,7 +30,7 @@ public abstract class AbstractPacketDeserializer : AbstractPacketSerializer, IPa
         var rawData = new ReadOnlyMemory<byte>(reader.ReadBytes(data.Length).ToArray());
         
         // Return deserialized data using protobuf
-        return Registry.Deserialize<AbstractGamePacket>(rawData);
+        return Registry.Deserialize<AbstractPacket>(rawData);
     }
 }
 
