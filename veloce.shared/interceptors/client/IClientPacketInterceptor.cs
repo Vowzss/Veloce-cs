@@ -1,6 +1,6 @@
-﻿using veloce.shared.events;
+﻿using veloce.shared.events.client;
 
-namespace veloce.shared.handlers;
+namespace veloce.shared.interceptors.client;
 
 /// <summary>
 /// Represents a packet interceptor object designed for client communication.

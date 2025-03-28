@@ -1,12 +1,18 @@
 ﻿using veloce.shared.packets;
+using veloce.shared.utils;
 
-namespace veloce.shared.handlers;
+namespace veloce.shared.interceptors;
 
 /// <summary>
 /// Represents an object to handle packets received from transport.
 /// </summary>
 public interface IPacketInterceptor
 {
+    /// <summary>
+    /// Represents the handler for packet deserialization
+    /// </summary>
+    protected IPacketDeserializer Deserilizer { get; }
+    
     /// <summary>
     /// Non-blocking method to resolve packet from data.
     /// </summary>

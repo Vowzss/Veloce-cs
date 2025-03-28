@@ -1,23 +1,28 @@
-﻿using ProtoBuf.Meta;
-using Serilog;
-using veloce.shared.events;
+﻿using veloce.shared.events.server;
 using veloce.shared.packets;
 using veloce.shared.utils;
 
-namespace veloce.shared.handlers;
+namespace veloce.shared.interceptors.server;
 
 public abstract class AbstractServerPacketInterceptor: IServerPacketInterceptor
 {
+    public IPacketDeserializer Deserilizer { get; }
+
     public ConnectEvent? OnConnect { get; set; }
     public DisconnectEvent? OnDisconnect { get; set; }
     public ReconnectEvent? OnReconnect { get; set; }
     
     public PongEvent? OnPong { get; set; }
-
+    
+    protected AbstractServerPacketInterceptor(ref IPacketDeserializer deserilizer)
+    {
+        Deserilizer = deserilizer;
+    }
+    
     public void Accept(byte[] data)
     {
         // Deserialize packet
-        var packet = PacketHandler.Read(data);
+        var packet = Deserilizer.Read(data);
 
         // Match against default packets
         switch (packet)

@@ -19,4 +19,9 @@ public interface IPacket
     /// Represents the timestamp when the packet was sent.
     /// </summary>
     public long Timestamp { get; }
+    
+    /// <summary>
+    /// Represents the signature to ensure reliability.
+    /// </summary>
+    public byte[] Signature { get; }
 }

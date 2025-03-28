@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using veloce.shared.enums;
 using veloce.shared.events;
+using veloce.shared.events.server;
 using veloce.shared.models;
 using veloce.shared.utils;
 
@@ -19,7 +20,7 @@ public abstract class AbstractServerChannel : AbstractChannel, IServerChannel
     public TickMissedEvent? OnTickMissed { get; protected set; }
     
     private readonly CancellationToken _token;
-    private readonly TickingClock _clock;
+    private readonly ITickerClock _clock;
     
     private readonly SemaphoreSlim _semaphore;
     private readonly ConcurrentQueue<UdpReceiveResult> _queue;
@@ -32,7 +33,7 @@ public abstract class AbstractServerChannel : AbstractChannel, IServerChannel
         _token = Signal.Token;
         
         // Setup ticking clock
-        _clock = new TickingClock(Config.TickInterval, _token);
+        _clock = new ServerTickingClock(Config.TickInterval, _token);
         _clock.OnTick += () => OnTick?.Invoke();
         _clock.OnTickMissed += time => OnTickMissed?.Invoke(time);
         
