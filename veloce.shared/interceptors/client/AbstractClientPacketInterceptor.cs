@@ -1,4 +1,6 @@
-﻿using veloce.shared.events.client;
+﻿using veloce.shared.events;
+using veloce.shared.events.client;
+using veloce.shared.models;
 using veloce.shared.packets;
 using veloce.shared.utils;
 
@@ -6,19 +8,22 @@ namespace veloce.shared.interceptors.client;
 
 public abstract class AbstractClientPacketInterceptor : IClientPacketInterceptor
 {
-    public IPacketDeserializer Deserilizer { get; }
+    public IPacketDeserializer Deserializer { get; }
     
+    public FirstHandshakeEvent? OnFirstHandshake { get; set;  }
+    public SecondHandshakeEvent? OnSecondHandshake { get; set; }
+
     public PingEvent? OnPing { get; set; }
     
-    protected AbstractClientPacketInterceptor(IPacketDeserializer deserilizer)
+    protected AbstractClientPacketInterceptor(IPacketDeserializer deserializer)
     {
-        Deserilizer = deserilizer;
+        Deserializer = deserializer;
     }
 
-    public void Accept(byte[] data)
+    public void Accept(byte[] data, EncryptionContext encryption)
     {
         // Deserialize packet
-        var packet = Deserilizer.Read(data);
+        var packet = Deserializer.Read(data, encryption);
         
         // Match against default packets
         switch (packet)

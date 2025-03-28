@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace veloce.shared.utils;
+﻿namespace veloce.shared.utils;
 
 /// <summary>
 /// Represents a unique object for packet serialization and deserialization.

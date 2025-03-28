@@ -1,4 +1,6 @@
-﻿using veloce.shared.events.server;
+﻿using veloce.shared.events;
+using veloce.shared.events.server;
+using veloce.shared.models;
 using veloce.shared.packets;
 using veloce.shared.utils;
 
@@ -6,7 +8,10 @@ namespace veloce.shared.interceptors.server;
 
 public abstract class AbstractServerPacketInterceptor: IServerPacketInterceptor
 {
-    public IPacketDeserializer Deserilizer { get; }
+    public IPacketDeserializer Deserializer { get; }
+    
+    public FirstHandshakeEvent? OnFirstHandshake { get; set; }
+    public SecondHandshakeEvent? OnSecondHandshake { get; set; }
 
     public ConnectEvent? OnConnect { get; set; }
     public DisconnectEvent? OnDisconnect { get; set; }
@@ -14,19 +19,28 @@ public abstract class AbstractServerPacketInterceptor: IServerPacketInterceptor
     
     public PongEvent? OnPong { get; set; }
     
-    protected AbstractServerPacketInterceptor(ref IPacketDeserializer deserilizer)
+    protected AbstractServerPacketInterceptor(ref IPacketDeserializer deserializer)
     {
-        Deserilizer = deserilizer;
+        Deserializer = deserializer;
     }
     
-    public void Accept(byte[] data)
+    // TODO: handle when encryption context not set yet when no handshake done first
+    public void Accept(byte[] data, EncryptionContext encryption)
     {
         // Deserialize packet
-        var packet = Deserilizer.Read(data);
+        var packet = Deserializer.Read(data, encryption);
 
         // Match against default packets
         switch (packet)
         {
+            case IFirstHandshakePacket p:
+                OnFirstHandshake?.Invoke(p);
+                return;
+            
+            case ISecondHandshakePacket p:
+                OnSecondHandshake?.Invoke(p);
+                return;
+            
             case IConnectPacket p:
                 OnConnect?.Invoke(p);
                 return;

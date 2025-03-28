@@ -1,6 +1,9 @@
-﻿namespace veloce.shared.packets;
+﻿using ProtoBuf;
 
-public abstract class AbstractPingPacket : AbstractPacket, IPingPacket
+namespace veloce.shared.packets;
+
+[ProtoContract]
+public abstract class AbstractPingPacket : AbstractGamePacket, IPingPacket
 {
     
 }

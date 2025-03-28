@@ -1,6 +1,8 @@
-﻿namespace veloce.shared.packets;
+﻿using ProtoBuf;
 
-public interface IConnectPacket : IPacket
+namespace veloce.shared.packets;
+
+[ProtoContract]
+public interface IConnectPacket : IGamePacket
 {
-    
 }

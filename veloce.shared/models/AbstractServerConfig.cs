@@ -1,4 +1,6 @@
-﻿namespace veloce.shared.models;
+﻿using System.Security.Cryptography;
+
+namespace veloce.shared.models;
 
 public abstract class AbstractServerConfig : IServerConfig
 {
@@ -11,6 +13,8 @@ public abstract class AbstractServerConfig : IServerConfig
     public TimeSpan? ClientReconnectTimeout { get; init; }
     
     public int ProcessingThreshold { get; init; }
+    
+    public RSA Rsa { get; } = RSA.Create();
 
     protected AbstractServerConfig(int tickRate)
     {

@@ -6,7 +6,7 @@ using veloce.shared.packets;
 namespace veloce.tests.packets;
 
 [ProtoContract]
-public abstract class AbstractPositionPacket : AbstractPacket, IPositionPacket
+public abstract class AbstractPositionPacket : AbstractGamePacket, IPositionPacket
 {
     [ProtoMember(4)]
     public float X { get; init; }

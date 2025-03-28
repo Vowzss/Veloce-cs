@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Serilog;
 using veloce.shared.events;
+using veloce.shared.utils;
 
 namespace veloce.shared.channels;
 
@@ -29,6 +30,11 @@ public interface IChannel
     /// Represents a signal for cancelling any threading tasks.
     /// </summary>
     protected CancellationTokenSource Signal { get; }
+    
+    /// <summary>
+    /// Represents the object for packet serialization
+    /// </summary>
+    protected IPacketSerializer Serializer { get; }
     
     /// <summary>
     /// Event fired when data is received from transport.

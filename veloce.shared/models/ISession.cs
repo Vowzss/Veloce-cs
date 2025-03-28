@@ -14,6 +14,11 @@ public interface ISession
     public IPEndPoint EndPoint { get; }
     
     /// <summary>
+    /// Represents the client encryption values.
+    /// </summary>
+    public EncryptionContext Encryption { get; }
+    
+    /// <summary>
     /// Represents the client session id.
     /// </summary>
     /// <remarks>

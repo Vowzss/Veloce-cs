@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using Serilog;
 using veloce.shared.events;
+using veloce.shared.utils;
 
 namespace veloce.shared.channels;
 
@@ -13,6 +14,8 @@ public abstract class AbstractChannel : IChannel
     public IPEndPoint EndPoint { get; }
     
     public CancellationTokenSource Signal { get; }
+    public IPacketSerializer Serializer { get; }
+    
     public DataReceiveEvent? OnDataReceived { get; set; }
 
     protected UdpClient Transport { get; }
