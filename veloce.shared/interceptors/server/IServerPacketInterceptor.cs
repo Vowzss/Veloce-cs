@@ -22,9 +22,4 @@ public interface IServerPacketInterceptor : IPacketInterceptor
     /// Event fired whenever the client reconnects.
     /// </summary>
     protected internal event ReconnectEvent OnReconnect;
-
-    /// <summary>
-    /// Event fired whenever the client pongs.
-    /// </summary>
-    protected internal event PongEvent OnPong;
 }

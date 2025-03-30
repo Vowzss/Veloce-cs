@@ -1,7 +1,11 @@
 ﻿namespace veloce.shared.attributes;
 
+/// <summary>
+/// Custom attribute to decorate any packet.
+/// </summary>
+/// <remarks>Any packets must be decorated with this attribute otherwise they won't be recognized.</remarks>
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-public class PacketIdentifierAttribute(string key) : Attribute
+public class PacketIdentifierAttribute(string id) : Attribute
 {
-    public string Key { get; } = key;
+    public string Id { get; } = id;
 }

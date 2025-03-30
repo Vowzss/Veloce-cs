@@ -1,4 +1,5 @@
-﻿using veloce.shared.events;
+﻿using Serilog.Core;
+using veloce.shared.events;
 using veloce.shared.events.client;
 using veloce.shared.handlers;
 using veloce.shared.models;
@@ -11,10 +12,9 @@ public abstract class AbstractClientPacketInterceptor : IClientPacketInterceptor
 {
     public IPacketDeserializer Deserializer { get; }
 
-    public event FirstHandshakeEvent OnFirstHandshake;
-    public event SecondHandshakeEvent OnSecondHandshake;
+    public event HandshakeEvent OnHandshake;
 
-    public event PingEvent OnPing;
+    public event HeartbeatEvent OnHeartbeat;
     
     protected AbstractClientPacketInterceptor(ref IPacketDeserializer deserializer)
     {
@@ -29,8 +29,12 @@ public abstract class AbstractClientPacketInterceptor : IClientPacketInterceptor
         // Match against default packets
         switch (packet)
         {
-            case IPingPacket p:
-                OnPing.Invoke(new PingEventArgs(args.Sender, p));
+            case IHandshakePacket p:
+                OnHandshake.Invoke(new HandshakeEventArgs(args.Sender, p));
+                return;
+            
+            case IHeartbeatPacket p:
+                OnHeartbeat.Invoke(new HeartbeatEventArgs(args.Sender, p));
                 return;
             
             default:

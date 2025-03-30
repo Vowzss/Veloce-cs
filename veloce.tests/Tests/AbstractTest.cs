@@ -33,16 +33,6 @@ public abstract class AbstractTest
         var endpoint = new IPEndPoint(IPAddress.Loopback, 52512);
         var config = new DefaultServerConfig();
         
-        AbstractPacketHandler.RegisterPacketType<AbstractPacket, AbstractFirstHandshakePacket>();
-        AbstractPacketHandler.RegisterPacketType<AbstractPacket, AbstractSecondHandshakePacket>();
-        
-        AbstractPacketHandler.RegisterPacketType<AbstractPacket, AbstractGamePacket>();
-        AbstractPacketHandler.RegisterPacketType<AbstractGamePacket, AbstractConnectPacket>();
-        AbstractPacketHandler.RegisterPacketType<AbstractGamePacket, AbstractDisconnectPacket>();
-        AbstractPacketHandler.RegisterPacketType<AbstractGamePacket, AbstractReconnectPacket>();
-        AbstractPacketHandler.RegisterPacketType<AbstractGamePacket, AbstractPingPacket>();
-        AbstractPacketHandler.RegisterPacketType<AbstractGamePacket, AbstractPongPacket>();
-        
         Logger = new LoggerConfiguration()
             .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss.fffd} {Level:u3}] > {Message:lj}{NewLine}{Exception}")
             .CreateLogger();

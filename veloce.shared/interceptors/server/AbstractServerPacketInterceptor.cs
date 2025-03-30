@@ -10,14 +10,13 @@ public abstract class AbstractServerPacketInterceptor : IServerPacketInterceptor
 {
     public IPacketDeserializer Deserializer { get; }
 
-    public event FirstHandshakeEvent OnFirstHandshake;
-    public event SecondHandshakeEvent OnSecondHandshake;
+    public event HandshakeEvent OnHandshake;
 
     public event ConnectEvent OnConnect;
     public event DisconnectEvent OnDisconnect;
     public event ReconnectEvent OnReconnect;
 
-    public event PongEvent OnPong;
+    public event HeartbeatEvent OnHeartbeat;
     
     protected AbstractServerPacketInterceptor(ref IPacketDeserializer deserializer)
     {
@@ -33,12 +32,12 @@ public abstract class AbstractServerPacketInterceptor : IServerPacketInterceptor
         // Match against default packets
         switch (packet)
         {
-            case IFirstHandshakePacket p:
-                OnFirstHandshake.Invoke(new FirstHandshakeEventArgs(args.Sender, p));
+            case IHandshakePacket p:
+                OnHandshake.Invoke(new HandshakeEventArgs(args.Sender, p));
                 return;
             
-            case ISecondHandshakePacket p:
-                OnSecondHandshake.Invoke(new SecondHandshakeEventArgs(args.Sender, p));
+            case IHeartbeatPacket p:
+                OnHeartbeat.Invoke(new HeartbeatEventArgs(args.Sender, p));
                 return;
             
             case IConnectPacket p:
@@ -51,10 +50,6 @@ public abstract class AbstractServerPacketInterceptor : IServerPacketInterceptor
            
             case IReconnectPacket p:
                 OnReconnect.Invoke(new ReconnectEventArgs(args.Sender, p));
-                return;
-            
-            case IPongPacket p:
-                OnPong.Invoke(new PongEventArgs(args.Sender, p));
                 return;
             
             default:

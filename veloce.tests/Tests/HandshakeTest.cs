@@ -1,4 +1,6 @@
 ﻿using System.Security.Cryptography;
+using veloce.shared.enums;
+using veloce.shared.packets;
 using veloce.tests.packets;
 
 namespace veloce.tests.Tests;
@@ -9,8 +11,10 @@ public sealed class HandshakeTest : AbstractTest
     
     public override async Task Execute()
     {
-        Client.Send(new FirstHandshakePacket {
-            PublicKey = _rsa.ExportPkcs8PrivateKey()
+        Client.Send(new VeloceHandshakePacket
+        {
+            Key = _rsa.ExportPkcs8PrivateKey(),
+            Step = HandshakeStep.PublicKey
         });
         
         Stop();

@@ -1,4 +1,5 @@
 ﻿using veloce.shared.events;
+using veloce.shared.events.client;
 using veloce.shared.handlers;
 using veloce.shared.models;
 using veloce.shared.packets;
@@ -17,14 +18,14 @@ public interface IPacketInterceptor
     protected internal IPacketDeserializer Deserializer { get; }
 
     /// <summary>
-    /// Event fired whenever the first handshake was received.
+    /// Event fired whenever a handshake was received.
     /// </summary>
-    protected internal event FirstHandshakeEvent OnFirstHandshake;
-
+    protected internal event HandshakeEvent OnHandshake;
+    
     /// <summary>
-    /// Event fired whenever the second handshake was received.
+    /// Event fired whenever a heartbeat was received.
     /// </summary>
-    protected internal event SecondHandshakeEvent OnSecondHandshake;
+    protected internal event HeartbeatEvent OnHeartbeat;
     
     /// <summary>
     /// Non-blocking method to resolve packet from data.

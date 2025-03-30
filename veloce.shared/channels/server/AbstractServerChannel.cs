@@ -144,14 +144,10 @@ public sealed class DefaultServerChannel : AbstractServerChannel
     {
         base.Start();
         
-        PacketInterceptor.OnFirstHandshake += packet =>
+        PacketInterceptor.OnHandshake += packet =>
         {
             Logger.Information("OnFirstHandshake");
         };
         
-        PacketInterceptor.OnSecondHandshake += packet =>
-        {
-            Logger.Information("OnSecondHandshake");
-        };
     }
 }

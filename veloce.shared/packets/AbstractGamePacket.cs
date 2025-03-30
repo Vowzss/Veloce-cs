@@ -1,4 +1,5 @@
 ﻿using ProtoBuf;
+using veloce.shared.attributes;
 
 namespace veloce.shared.packets;
 
@@ -18,6 +19,25 @@ public abstract class AbstractGamePacket : AbstractPacket, IGamePacket
 
     public override string ToString()
     {
-        return $"Key:[{Key}] - Player:[{ClientIdentifier}] - Timestamp:[{Timestamp}]";
+        return $"Identifier:[{Identifier}] - Player:[{ClientIdentifier}] - Timestamp:[{Timestamp}]";
     }
+}
+
+
+
+[ProtoContract]
+public abstract class AbstractFdpPacket : AbstractGamePacket
+{
+}
+
+[ProtoContract]
+public abstract class AbstractSafeFdpPacket : AbstractFdpPacket
+{
+}
+
+[ProtoContract]
+[PacketIdentifier("veloce.pkt.fdp")]
+public sealed class FdpPacket : AbstractSafeFdpPacket
+{
+    
 }

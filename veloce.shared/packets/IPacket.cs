@@ -8,7 +8,7 @@ public interface IPacket
     /// <summary>
     /// Represents the unique identifier for the packet.
     /// </summary>
-    public string Key { get; }
+    public string Identifier { get; }
     
     /// <summary>
     /// Represents the timestamp when the packet was sent.

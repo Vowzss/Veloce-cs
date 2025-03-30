@@ -7,8 +7,4 @@ namespace veloce.shared.interceptors.client;
 /// </summary>
 public interface IClientPacketInterceptor : IPacketInterceptor
 {
-    /// <summary>
-    /// Event fired whenever the server pings.
-    /// </summary>
-    protected event PingEvent OnPing;
 }
