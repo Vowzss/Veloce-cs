@@ -1,4 +1,5 @@
-﻿using veloce.shared.handlers;
+﻿using System.Reflection;
+using veloce.shared.handlers;
 using veloce.shared.packets;
 using veloce.tests.packets;
 using veloce.tests.Tests;
@@ -9,8 +10,10 @@ public static class Program
 {
     public static void Main(string[] args)
     {
-        AbstractPacketHandler.RegisterPacketType<AbstractGamePacket, AbstractPositionPacket>();
-        AbstractPacketHandler.RegisterPacketType<AbstractPositionPacket, PositionPacket>();
+        PacketRegistry.FindAndLoadPackets(Assembly.GetExecutingAssembly());
+        
+        //AbstractPacketHandler.RegisterPacketType<AbstractGamePacket, AbstractPositionPacket>();
+        //AbstractPacketHandler.RegisterPacketType<AbstractPositionPacket, PositionPacket>();
         
         new HandshakeTest().Execute().Wait();
     }

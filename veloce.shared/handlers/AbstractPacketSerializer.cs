@@ -10,9 +10,7 @@ public abstract class AbstractPacketSerializer : AbstractPacketHandler, IPacketS
     public byte[] Write<TPacket>(TPacket packet, EncryptionContext? encryption) where TPacket : class, IPacket
     {
         // Serialize data using protobuf
-        using var stream = new MemoryStream();
-        Registry.Serialize(stream, packet);
-        var rawData = stream.ToArray();
+        var rawData = PacketRegistry.Serialize(packet);
 
         // Case when packets cannot be secured
         // e.g. during handshake

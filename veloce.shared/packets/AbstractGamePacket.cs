@@ -22,22 +22,3 @@ public abstract class AbstractGamePacket : AbstractPacket, IGamePacket
         return $"Identifier:[{Identifier}] - Player:[{ClientIdentifier}] - Timestamp:[{Timestamp}]";
     }
 }
-
-
-
-[ProtoContract]
-public abstract class AbstractFdpPacket : AbstractGamePacket
-{
-}
-
-[ProtoContract]
-public abstract class AbstractSafeFdpPacket : AbstractFdpPacket
-{
-}
-
-[ProtoContract]
-[PacketIdentifier("veloce.pkt.fdp")]
-public sealed class FdpPacket : AbstractSafeFdpPacket
-{
-    
-}
