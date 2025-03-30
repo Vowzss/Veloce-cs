@@ -5,9 +5,6 @@ using veloce.shared.utils;
 
 namespace veloce.shared.handlers;
 
-/// <summary>
-/// Represents an object for secure packet deserialization.
-/// </summary>
 public abstract class AbstractPacketDeserializer : AbstractPacketSerializer, IPacketDeserializer
 {
     public IPacket Read(byte[] data, EncryptionContext? encryption)

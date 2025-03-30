@@ -5,5 +5,5 @@ namespace veloce.shared.packets;
 [ProtoContract]
 public interface IFirstHandshakePacket : IPacket
 {
-    public string PublicKey { get; }
+    public byte[] PublicKey { get; }
 }

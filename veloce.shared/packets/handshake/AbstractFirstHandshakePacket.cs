@@ -6,12 +6,12 @@ namespace veloce.shared.packets;
 public abstract class AbstractFirstHandshakePacket : AbstractPacket, IFirstHandshakePacket
 {
     [ProtoMember(3)]
-    public string PublicKey { get; init; } = null!;
+    public required byte[] PublicKey { get; init; } = null!;
 
     // Protobuf serialization
     protected AbstractFirstHandshakePacket() { }
 
-    protected AbstractFirstHandshakePacket(string key)
+    protected AbstractFirstHandshakePacket(byte[] key)
     {
         PublicKey = key;
     }

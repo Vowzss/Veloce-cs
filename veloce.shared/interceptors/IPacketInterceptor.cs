@@ -14,25 +14,25 @@ public interface IPacketInterceptor
     /// <summary>
     /// Represents the object for packet deserialization
     /// </summary>
-    protected IPacketDeserializer Deserializer { get; }
-    
+    protected internal IPacketDeserializer Deserializer { get; }
+
     /// <summary>
     /// Event fired whenever the first handshake was received.
     /// </summary>
-    protected FirstHandshakeEvent? OnFirstHandshake { get; }
-    
+    protected internal event FirstHandshakeEvent OnFirstHandshake;
+
     /// <summary>
     /// Event fired whenever the second handshake was received.
     /// </summary>
-    protected SecondHandshakeEvent? OnSecondHandshake { get; }
+    protected internal event SecondHandshakeEvent OnSecondHandshake;
     
     /// <summary>
     /// Non-blocking method to resolve packet from data.
     /// </summary>
-    public void Accept(byte[] data, EncryptionContext? encryption);
+    protected internal void Accept(DataReceiveArgs args, EncryptionContext? encryption);
     
     /// <summary>
     /// Non-blocking method to process custom packets.
     /// </summary>
-    public void Handle(IPacket packet);
+    protected internal void Handle(IEventPacketArgs args);
 }

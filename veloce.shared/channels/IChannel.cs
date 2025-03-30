@@ -37,7 +37,7 @@ public interface IChannel<out TPacketInterceptor>
     /// <summary>
     /// Represents the object for packet serialization
     /// </summary>
-    protected IPacketSerializer Serializer { get; }
+    protected internal IPacketSerializer Serializer { get; }
     
     /// <summary>
     /// Represents the object for packet deserialization

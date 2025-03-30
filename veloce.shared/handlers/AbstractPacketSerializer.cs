@@ -5,9 +5,6 @@ using veloce.shared.utils;
 
 namespace veloce.shared.handlers;
 
-/// <summary>
-/// Represents an object for secure packet serialization.
-/// </summary>
 public abstract class AbstractPacketSerializer : AbstractPacketHandler, IPacketSerializer
 {
     public byte[] Write<TPacket>(TPacket packet, EncryptionContext? encryption) where TPacket : class, IPacket

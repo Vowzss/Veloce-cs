@@ -10,5 +10,5 @@ public interface IClientPacketInterceptor : IPacketInterceptor
     /// <summary>
     /// Event fired whenever the server pings.
     /// </summary>
-    protected PingEvent? OnPing { get; }
+    protected event PingEvent OnPing;
 }

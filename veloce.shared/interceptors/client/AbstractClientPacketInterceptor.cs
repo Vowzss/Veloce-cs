@@ -10,36 +10,36 @@ namespace veloce.shared.interceptors.client;
 public abstract class AbstractClientPacketInterceptor : IClientPacketInterceptor
 {
     public IPacketDeserializer Deserializer { get; }
-    
-    public FirstHandshakeEvent? OnFirstHandshake { get; set;  }
-    public SecondHandshakeEvent? OnSecondHandshake { get; set; }
 
-    public PingEvent? OnPing { get; set; }
+    public event FirstHandshakeEvent OnFirstHandshake;
+    public event SecondHandshakeEvent OnSecondHandshake;
+
+    public event PingEvent OnPing;
     
     protected AbstractClientPacketInterceptor(ref IPacketDeserializer deserializer)
     {
         Deserializer = deserializer;
     }
 
-    public void Accept(byte[] data, EncryptionContext? encryption)
+    public void Accept(DataReceiveArgs args, EncryptionContext? encryption)
     {
         // Deserialize packet
-        var packet = Deserializer.Read(data, encryption);
-        
+        var packet = Deserializer.Read(args.Data, encryption);
+
         // Match against default packets
         switch (packet)
         {
             case IPingPacket p:
-                OnPing?.Invoke(p);
+                OnPing.Invoke(new PingEventArgs(args.Sender, p));
                 return;
             
             default:
-                Handle(packet);
+                Handle(new EventPacketArgs(args.Sender, packet));
                 return;
         }
     }
 
-    public virtual void Handle(IPacket packet) { }
+    public virtual void Handle(IEventPacketArgs args) { }
 }
 
 public sealed class DefaultClientPacketInterceptor : AbstractClientPacketInterceptor

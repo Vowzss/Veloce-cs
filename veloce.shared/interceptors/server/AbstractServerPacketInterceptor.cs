@@ -1,24 +1,23 @@
 ﻿using veloce.shared.events;
-using veloce.shared.events.server;
+using veloce.shared.events.client;
 using veloce.shared.handlers;
 using veloce.shared.models;
 using veloce.shared.packets;
-using veloce.shared.utils;
 
 namespace veloce.shared.interceptors.server;
 
-public abstract class AbstractServerPacketInterceptor: IServerPacketInterceptor
+public abstract class AbstractServerPacketInterceptor : IServerPacketInterceptor
 {
     public IPacketDeserializer Deserializer { get; }
-    
-    public FirstHandshakeEvent? OnFirstHandshake { get; init; }
-    public SecondHandshakeEvent? OnSecondHandshake { get; init; }
 
-    public ConnectEvent? OnConnect { get; init; }
-    public DisconnectEvent? OnDisconnect { get; init; }
-    public ReconnectEvent? OnReconnect { get; init; }
-    
-    public PongEvent? OnPong { get; init; }
+    public event FirstHandshakeEvent OnFirstHandshake;
+    public event SecondHandshakeEvent OnSecondHandshake;
+
+    public event ConnectEvent OnConnect;
+    public event DisconnectEvent OnDisconnect;
+    public event ReconnectEvent OnReconnect;
+
+    public event PongEvent OnPong;
     
     protected AbstractServerPacketInterceptor(ref IPacketDeserializer deserializer)
     {
@@ -26,50 +25,51 @@ public abstract class AbstractServerPacketInterceptor: IServerPacketInterceptor
     }
     
     // TODO: handle when encryption context not set yet when no handshake done first
-    public void Accept(byte[] data, EncryptionContext? encryption)
+    public void Accept(DataReceiveArgs args, EncryptionContext? encryption)
     {
         // Deserialize packet
-        var packet = Deserializer.Read(data, encryption);
+        var packet = Deserializer.Read(args.Data, encryption);
 
         // Match against default packets
         switch (packet)
         {
             case IFirstHandshakePacket p:
-                OnFirstHandshake?.Invoke(p);
+                OnFirstHandshake.Invoke(new FirstHandshakeEventArgs(args.Sender, p));
                 return;
             
             case ISecondHandshakePacket p:
-                OnSecondHandshake?.Invoke(p);
+                OnSecondHandshake.Invoke(new SecondHandshakeEventArgs(args.Sender, p));
                 return;
             
             case IConnectPacket p:
-                OnConnect?.Invoke(p);
+                OnConnect.Invoke(new ConnectEventArgs(args.Sender, p));
                 return;
            
             case IDisconnectPacket p:
-                OnDisconnect?.Invoke(p);
+                OnDisconnect.Invoke(new DisconnectEventArgs(args.Sender, p));
                 return;
            
             case IReconnectPacket p:
-                OnReconnect?.Invoke(p);
+                OnReconnect.Invoke(new ReconnectEventArgs(args.Sender, p));
                 return;
             
             case IPongPacket p:
-                OnPong?.Invoke(p);
+                OnPong.Invoke(new PongEventArgs(args.Sender, p));
                 return;
             
             default:
-                Handle(packet);
+                Handle(new EventPacketArgs(args.Sender, packet));
                 return;
         }
     }
 
-    public virtual void Handle(IPacket packet) { }
+    public virtual void Handle(IEventPacketArgs args) { }
 }
 
 public sealed class DefaultServerPacketInterceptor : AbstractServerPacketInterceptor
 {
     public DefaultServerPacketInterceptor(IPacketDeserializer deserializer) : base(ref deserializer)
     {
+        
     }
 }

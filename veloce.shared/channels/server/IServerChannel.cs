@@ -30,16 +30,16 @@ public interface IServerChannel : IChannel<IServerPacketInterceptor>
     /// Represents the object for client session handler.
     /// </summary>
     protected IServerSessionHandler SessionHandler { get; }
-    
+
     /// <summary>
     /// Event fired whenever the server ticks.
     /// </summary>
-    protected TickEvent? OnTick { get; }
-    
+    protected event TickEvent OnTick;
+
     /// <summary>
     /// Event fired whenever the server missed a tick.
     /// </summary>
-    protected TickMissedEvent? OnTickMissed { get; }
+    protected event TickMissedEvent OnTickMissed;
     
     protected void Start();
     protected void Stop();

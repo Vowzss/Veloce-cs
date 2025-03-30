@@ -2,5 +2,5 @@
 
 public static class DateTimeExtensions
 {
-    public static long Now => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+    public static long NowMs => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 }

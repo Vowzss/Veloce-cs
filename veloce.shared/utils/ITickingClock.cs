@@ -11,12 +11,12 @@ public interface ITickingClock
     /// <summary>
     /// Event fired whenever the clock ticks.
     /// </summary>
-    public TickEvent? OnTick { get; set; }
+    public event TickEvent OnTick;
 
     /// <summary>
     /// Event fired whenever the clock missed a tick.
     /// </summary>
-    public TickMissedEvent? OnTickMissed { get; set; }
+    public event TickMissedEvent OnTickMissed;
 
     /// <summary>
     /// Non-blocking method to start the clock;

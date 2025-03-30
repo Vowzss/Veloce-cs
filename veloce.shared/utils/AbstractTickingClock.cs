@@ -5,8 +5,8 @@ namespace veloce.shared.utils;
 
 public abstract class AbstractTickingClock : ITickingClock
 {
-    public TickEvent? OnTick { get; set; }
-    public TickMissedEvent? OnTickMissed { get; set; }
+    public event TickEvent OnTick;
+    public event TickMissedEvent OnTickMissed;
     
     /// <summary>
     /// Represents the time interval at which the clock must tick.
@@ -42,14 +42,14 @@ public abstract class AbstractTickingClock : ITickingClock
                     var remainingTime = TickInterval - elapsedTime;
                     
                     // Determine weather tick was missed or in time but need re-sync
-                    if (remainingTime < 0) OnTickMissed?.Invoke(elapsedTime);
+                    if (remainingTime < 0) OnTickMissed.Invoke(elapsedTime);
                     else await Task.Delay((int)remainingTime, Token);
                     
                     return;
                 }
                 
                 lastTickTime = currentTime;
-                OnTick?.Invoke();
+                OnTick.Invoke();
             }
             finally
             {

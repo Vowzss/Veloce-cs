@@ -21,6 +21,6 @@ public abstract class AbstractPacket : IPacket
         if (attribute  == null) throw new InvalidOperationException($"Packet decoration is missing on {GetType()}.");
 
         Key = attribute.Key.ToUpperInvariant();
-        Timestamp = DateTimeExtensions.Now;
+        Timestamp = DateTimeExtensions.NowMs;
     }
 }

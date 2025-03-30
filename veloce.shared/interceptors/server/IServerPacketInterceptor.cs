@@ -1,5 +1,5 @@
-﻿using veloce.shared.events.server;
-using veloce.shared.utils;
+﻿using veloce.shared.events;
+using veloce.shared.events.client;
 
 namespace veloce.shared.interceptors.server;
 
@@ -11,20 +11,20 @@ public interface IServerPacketInterceptor : IPacketInterceptor
     /// <summary>
     /// Event fired whenever a client connects.
     /// </summary>
-    protected ConnectEvent? OnConnect { get; }
-    
+    protected internal event ConnectEvent OnConnect;
+
     /// <summary>
     /// Event fired whenever the client disconnects.
     /// </summary>
-    protected DisconnectEvent? OnDisconnect { get; }
-    
+    protected internal event DisconnectEvent OnDisconnect;
+
     /// <summary>
     /// Event fired whenever the client reconnects.
     /// </summary>
-    protected ReconnectEvent? OnReconnect { get; }
-    
+    protected internal event ReconnectEvent OnReconnect;
+
     /// <summary>
     /// Event fired whenever the client pongs.
     /// </summary>
-    protected PongEvent? OnPong { get; }
+    protected internal event PongEvent OnPong;
 }

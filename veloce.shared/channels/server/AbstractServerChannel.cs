@@ -18,8 +18,8 @@ public abstract class AbstractServerChannel : AbstractChannel<IServerPacketInter
     public ServerStatus Status { get; protected set; } = ServerStatus.Unknown;
     public required IServerSessionHandler SessionHandler { get; init; }
 
-    public TickEvent? OnTick { get; protected set; }
-    public TickMissedEvent? OnTickMissed { get; protected set; }
+    public event TickEvent OnTick;
+    public event TickMissedEvent OnTickMissed;
     
     private readonly CancellationToken _token;
     private readonly ITickingClock _clock;
@@ -44,7 +44,7 @@ public abstract class AbstractServerChannel : AbstractChannel<IServerPacketInter
         _queue = new ConcurrentQueue<UdpReceiveResult>();
     }
     
-    public void Start()
+    public virtual void Start()
     {
         Logger.Information("Starting...");
         Status = ServerStatus.Starting;
@@ -56,7 +56,7 @@ public abstract class AbstractServerChannel : AbstractChannel<IServerPacketInter
         Logger.Information("Online!");
     }
 
-    public void Stop()
+    public virtual void Stop()
     {
         Logger.Information("Stopping...");
         Status = ServerStatus.Stopping;
@@ -121,7 +121,8 @@ public abstract class AbstractServerChannel : AbstractChannel<IServerPacketInter
                 while (_queue.TryDequeue(out var rs))
                 {
                     var session = SessionHandler.Get(rs.RemoteEndPoint);
-                    PacketInterceptor.Accept(rs.Buffer, session?.Encryption);
+                    var args = new DataReceiveArgs(rs.RemoteEndPoint, rs.Buffer);
+                    PacketInterceptor.Accept(args, session?.Encryption);
                 }
             }
             finally
@@ -137,5 +138,20 @@ public sealed class DefaultServerChannel : AbstractServerChannel
 {
     public DefaultServerChannel(IPEndPoint endPoint, IServerConfig config) : base(endPoint, config)
     {
+    }
+
+    public override void Start()
+    {
+        base.Start();
+        
+        PacketInterceptor.OnFirstHandshake += packet =>
+        {
+            Logger.Information("OnFirstHandshake");
+        };
+        
+        PacketInterceptor.OnSecondHandshake += packet =>
+        {
+            Logger.Information("OnSecondHandshake");
+        };
     }
 }

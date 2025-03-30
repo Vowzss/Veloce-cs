@@ -4,7 +4,7 @@ using veloce.shared.packets;
 namespace veloce.shared.handlers;
 
 /// <summary>
-/// Represents an object for packet deserialization.
+/// Represents an object for secure packet deserialization.
 /// </summary>
 public interface IPacketDeserializer : IPacketHandler
 {
