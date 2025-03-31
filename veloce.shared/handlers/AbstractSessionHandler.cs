@@ -7,16 +7,16 @@ namespace veloce.shared.handlers;
 public abstract class AbstractSessionHandler<TSession> : ISessionHandler<TSession>
     where TSession : class, ISession
 {
-    public IDictionary<IPEndPoint, TSession> Sessions { get; }
+    public IDictionary<string, TSession> Sessions { get; }
 
     protected AbstractSessionHandler()
     {
-        Sessions = new ConcurrentDictionary<IPEndPoint, TSession>();
+        Sessions = new ConcurrentDictionary<string, TSession>();
     }
     
-    public TSession? Get(IPEndPoint endpoint)
+    public TSession? Get(string sessionId)
     {
-        Sessions.TryGetValue(endpoint, out var session);
+        Sessions.TryGetValue(sessionId, out var session);
         return session;
     }
 }

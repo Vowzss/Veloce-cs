@@ -12,9 +12,6 @@ public static class Program
     {
         PacketRegistry.FindAndLoadPackets(Assembly.GetExecutingAssembly());
         
-        //AbstractPacketHandler.RegisterPacketType<AbstractGamePacket, AbstractPositionPacket>();
-        //AbstractPacketHandler.RegisterPacketType<AbstractPositionPacket, PositionPacket>();
-        
         new HandshakeTest().Execute().Wait();
     }
 }

@@ -3,8 +3,8 @@
 public enum ServerStatus
 {
     Unknown = 0,
-    Offline,
     Starting,
-    Stopping,
     Online,
+    Stopping,
+    Offline,
 }

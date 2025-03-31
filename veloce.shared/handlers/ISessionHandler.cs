@@ -9,7 +9,7 @@ namespace veloce.shared.handlers;
 public interface ISessionHandler<TSession>
     where TSession : class, ISession
 {
-    public IDictionary<IPEndPoint, TSession> Sessions { get; }
+    public IDictionary<string, TSession> Sessions { get; }
     
-    public TSession? Get(IPEndPoint endpoint);
+    public TSession? Get(string endpoint);
 }

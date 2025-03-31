@@ -6,6 +6,7 @@ using veloce.shared.events;
 using veloce.shared.handlers;
 using veloce.shared.interceptors.server;
 using veloce.shared.models;
+using veloce.shared.packets;
 using veloce.shared.utils;
 
 namespace veloce.shared.channels.server;
@@ -108,8 +109,7 @@ public abstract class AbstractServerChannel : AbstractChannel<IServerPacketInter
             await Task.Delay(1, _token);
         }
     }
-
-
+    
     public override async Task Process()
     {
         while (Status == ServerStatus.Online || !_token.IsCancellationRequested)
@@ -120,7 +120,7 @@ public abstract class AbstractServerChannel : AbstractChannel<IServerPacketInter
             {
                 while (_queue.TryDequeue(out var rs))
                 {
-                    var session = SessionHandler.Get(rs.RemoteEndPoint);
+                    var session = SessionHandler.Get(rs.RemoteEndPoint.ToString());
                     var args = new DataReceiveArgs(rs.RemoteEndPoint, rs.Buffer);
                     PacketInterceptor.Accept(args, session?.Encryption);
                 }
@@ -131,6 +131,51 @@ public abstract class AbstractServerChannel : AbstractChannel<IServerPacketInter
                 await Task.Delay(1, _token);
             }
         }
+    }
+    
+    public async Task Send(string sessionId, IPacket packet)
+    {
+        // TODO: find a better way to do so
+        if (packet is not IHandshakePacket)
+        {
+            var session = SessionHandler.Get(sessionId);
+            if (session == null)
+            {
+                Logger.Warning($"Attempt to send '{packet.Identifier}' packet to unknown session ID:{sessionId}.");
+                return;
+            }
+        
+            if (session.Status != ClientStatus.Connected)
+            {
+                Logger.Warning($"Cancelled '{packet.Identifier}' packet due to unstable session ID:{sessionId}.");
+                return;
+            }
+        }
+        
+        await Send(session, packet);
+    }
+
+    public async Task Send(IServerSession session, IPacket packet)
+    {
+        Logger.Information($"Sending '{packet.Identifier}' packet to client ID:{session.Id}.");
+        
+        try
+        {
+            var data = Serializer.Write(packet, session.Encryption);
+            await Transport.SendAsync(data, data.Length, session.EndPoint);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex, $"Failed to transport '{packet.Identifier}' packet.");
+        }
+    }
+
+    public async Task Broadcast(IPacket packet)
+    {
+        Logger.Information($"Broadcasting '{packet.Identifier}' packet to connected clients.");
+        
+        foreach (var session in SessionHandler.Sessions.Values)
+            await Send(session, packet);
     }
 }
 
@@ -144,9 +189,29 @@ public sealed class DefaultServerChannel : AbstractServerChannel
     {
         base.Start();
         
-        PacketInterceptor.OnHandshake += packet =>
+        PacketInterceptor.OnHandshake += async args =>
         {
-            Logger.Information("OnFirstHandshake");
+            // TODO: account for custom sessionId
+            var sessionId = args.Sender.ToString();
+            var packet = args.Packet as IHandshakePacket;
+            
+            switch (packet!.Step)
+            {
+                case HandshakeStep.PublicKey:
+                    await Send(sessionId, new VeloceHandshakePacket
+                    {
+                        Key = Config.GetPublicKey(),
+                        Step = HandshakeStep.PublicKey
+                    });
+                    break;
+                case HandshakeStep.AesKey:
+                    await Send(sessionId, new VeloceHandshakePacket
+                    {
+                        Key = null,
+                        Step = HandshakeStep.AesKey
+                    });
+                    break;
+            }
         };
         
     }

@@ -13,12 +13,12 @@ public abstract class AbstractClientChannel : AbstractChannel<IClientPacketInter
     {
     }
 
-    public void Send(IPacket packet)
+    public async Task Send(IPacket packet)
     {
         try
         {
             var data = Serializer.Write(packet, Encryption);
-            Transport.Send(data, data.Length, EndPoint);
+            await Transport.SendAsync(data, data.Length, EndPoint);
         }
         catch (Exception ex)
         {

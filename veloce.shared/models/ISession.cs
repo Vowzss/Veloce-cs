@@ -4,7 +4,7 @@ using veloce.shared.enums;
 namespace veloce.shared.models;
 
 /// <summary>
-/// Represents an object to manage a client connection.
+/// Represents an object to manage a connection.
 /// </summary>
 public interface ISession
 {
@@ -25,7 +25,7 @@ public interface ISession
     /// <para>This value must be unique.</para>
     /// <para>Unless specified, <see cref="EndPoint"/> acts as such.</para>
     /// </remarks>
-    public string SessionId { get; }
+    public string Id { get; }
 
     /// <summary>
     /// Represents the client status.

@@ -4,6 +4,9 @@ using veloce.shared.packets;
 
 namespace veloce.shared.channels.client;
 
+/// <summary>
+/// Represents a channel object designed for client communication.
+/// </summary>
 public interface IClientChannel : IChannel<IClientPacketInterceptor>
 {
     /// <summary>
@@ -11,5 +14,8 @@ public interface IClientChannel : IChannel<IClientPacketInterceptor>
     /// </summary>
     protected EncryptionContext? Encryption { get; }
     
-    protected void Send(IPacket packet);
+    /// <summary>
+    /// Non-block method to send a packet to a server.
+    /// </summary>
+    protected Task Send(IPacket packet);
 }
