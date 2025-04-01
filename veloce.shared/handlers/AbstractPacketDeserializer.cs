@@ -15,10 +15,10 @@ public abstract class AbstractPacketDeserializer : AbstractPacketSerializer, IPa
             return PacketRegistry.Deserialize(data);
         
         // Load aes iv from serialized data for deserialization
-        encryption.Value.LoadIv(data);
+        encryption.LoadIv(data);
         
         // Decrypt data
-        using var decryptor = encryption.Value.GetDecryptor(encryption.Value.AesIv);
+        using var decryptor = encryption.GetDecryptor();
         using var ms = new MemoryStream(data);
         using var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
         using var reader = new BinaryReader(cs);

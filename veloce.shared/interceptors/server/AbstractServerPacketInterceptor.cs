@@ -23,42 +23,47 @@ public abstract class AbstractServerPacketInterceptor : IServerPacketInterceptor
         Deserializer = deserializer;
     }
     
-    // TODO: handle when encryption context not set yet when no handshake done first
-    public void Accept(DataReceiveArgs args, EncryptionContext? encryption)
+    public bool Accept(DataReceiveArgs args, EncryptionContext? encryption)
     {
         // Deserialize packet
         var packet = Deserializer.Read(args.Data, encryption);
-
+        
+        // Edge case: no encryption means the packet must be a handshake
+        if (encryption == null || !encryption.IsValid())
+        {
+            if (packet is not IHandshakePacket) return false;
+            OnHandshake.Invoke(new HandshakeEventArgs(args.Sender, (IHandshakePacket)packet));
+            return true;
+        }
+        
         // Match against default packets
         switch (packet)
         {
-            case IHandshakePacket p:
-                OnHandshake.Invoke(new HandshakeEventArgs(args.Sender, p));
-                return;
-            
             case IHeartbeatPacket p:
                 OnHeartbeat.Invoke(new HeartbeatEventArgs(args.Sender, p));
-                return;
+                return true;
             
             case IConnectPacket p:
                 OnConnect.Invoke(new ConnectEventArgs(args.Sender, p));
-                return;
+                return true;
            
             case IDisconnectPacket p:
                 OnDisconnect.Invoke(new DisconnectEventArgs(args.Sender, p));
-                return;
+                return true;
            
             case IReconnectPacket p:
                 OnReconnect.Invoke(new ReconnectEventArgs(args.Sender, p));
-                return;
+                return true;
             
             default:
-                Handle(new EventPacketArgs(args.Sender, packet));
-                return;
+                return Handle(new EventPacketArgs(args.Sender, packet));
         }
     }
 
-    public virtual void Handle(IEventPacketArgs args) { }
+    public virtual bool Handle(IEventPacketArgs args)
+    {
+        return false;
+    }
 }
 
 public sealed class DefaultServerPacketInterceptor : AbstractServerPacketInterceptor

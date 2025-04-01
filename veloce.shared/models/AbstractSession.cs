@@ -6,28 +6,21 @@ namespace veloce.shared.models;
 
 public abstract class AbstractSession : ISession
 {
-    public IPEndPoint EndPoint { get; protected init; }
-    public string Id { get; protected init; }
+    public IPEndPoint EndPoint { get; }
+    public string Id { get; }
     
     public ClientStatus Status { get; protected set; }
     public long? LastSeenAt { get; protected set; }
     public long? DisconnectAt { get; protected set; }
     
-    public EncryptionContext Encryption { get; protected init; }
+    public EncryptionContext Encryption { get; protected set; }
 
-    protected AbstractSession(IPEndPoint endPoint, EncryptionContext encryption)
+    protected AbstractSession(IPEndPoint endPoint, string id)
     {
         EndPoint = endPoint;
-        Id = HashCode.Combine(EndPoint).ToString();
+        Id = id;
         
         Status = ClientStatus.Unknown;
-        Encryption = encryption;
-    }
-}
-
-public sealed class DefaultSession : AbstractSession
-{
-    public DefaultSession(IPEndPoint endPoint, EncryptionContext encryption) : base(endPoint, encryption)
-    {
+        Encryption = new EncryptionContext();
     }
 }

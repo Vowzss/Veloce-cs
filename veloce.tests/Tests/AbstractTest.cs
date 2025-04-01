@@ -31,14 +31,14 @@ public abstract class AbstractTest
     protected AbstractTest()
     {
         var endpoint = new IPEndPoint(IPAddress.Loopback, 52512);
-        var config = new DefaultServerConfig();
+        var config = new VeloceServerConfig();
         
         Logger = new LoggerConfiguration()
             .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss.fffd} {Level:u3}] > {Message:lj}{NewLine}{Exception}")
             .CreateLogger();
         
         // Create a server
-        _server = new DefaultServerChannel(endpoint, config)
+        _server = new VeloceServerChannel(endpoint, config)
         {
             Serializer = new DefaultPacketSerializer(),
             PacketInterceptor = new DefaultServerPacketInterceptor(new DefaultPacketDeserializer()),
@@ -47,7 +47,7 @@ public abstract class AbstractTest
         _server.Start();
         
         // Create a client
-        Client = new DefaultClientChannel(endpoint)
+        Client = new VeloceClientChannel(endpoint)
         {
             Serializer = new DefaultPacketSerializer(),
             PacketInterceptor = new DefaultClientPacketInterceptor(new DefaultPacketDeserializer())

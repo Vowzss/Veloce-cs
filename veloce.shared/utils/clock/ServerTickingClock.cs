@@ -5,7 +5,7 @@
 /// </summary>
 public sealed class ServerTickingClock : AbstractTickingClock
 {
-    public ServerTickingClock(int tickInterval, CancellationToken token) : base(tickInterval, token)
+    public ServerTickingClock(int tickRate, CancellationToken token) : base(tickRate, token)
     {
     }
 }

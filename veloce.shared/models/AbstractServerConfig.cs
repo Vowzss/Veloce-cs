@@ -5,7 +5,6 @@ namespace veloce.shared.models;
 public abstract class AbstractServerConfig : IServerConfig
 {
     public int TickRate { get; init; }
-    public int TickInterval { get; init; }
     
     public int MaxWorkerCount { get; init; }
     
@@ -14,24 +13,26 @@ public abstract class AbstractServerConfig : IServerConfig
     
     public int ProcessingThreshold { get; init; }
     
-    public RSA Rsa { get; } = RSA.Create();
+    public RSA Rsa { get; }
 
-    protected AbstractServerConfig(int tickRate)
+    protected AbstractServerConfig(int tickRate, string? privateKeyPem = null)
     {
         TickRate = tickRate;
-        TickInterval = 1000 / tickRate;
-        
         MaxWorkerCount = Environment.ProcessorCount;
         
         ClientTimeout = TimeSpan.FromSeconds(20);
 
         ProcessingThreshold = 1000;
+        
+        Rsa = RSA.Create();
+        if (privateKeyPem != null) 
+            Rsa.ImportFromPem(privateKeyPem);
     }
 }
 
-public sealed class DefaultServerConfig : AbstractServerConfig
+public sealed class VeloceServerConfig : AbstractServerConfig
 {
-    public DefaultServerConfig() : base(60)
+    public VeloceServerConfig() : base(60)
     {
         ClientReconnectTimeout = TimeSpan.FromSeconds(120);
     }

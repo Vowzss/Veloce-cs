@@ -9,6 +9,11 @@ namespace veloce.shared.utils;
 public interface ITickingClock
 {
     /// <summary>
+    /// Represents the target tick rate <c>in Hz</c>.
+    /// </summary>
+    protected int TickRate { get; }
+    
+    /// <summary>
     /// Event fired whenever the clock ticks.
     /// </summary>
     public event TickEvent OnTick;

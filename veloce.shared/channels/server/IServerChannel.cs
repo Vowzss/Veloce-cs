@@ -54,15 +54,6 @@ public interface IServerChannel : IChannel<IServerPacketInterceptor>
     /// <summary>
     /// Method to send a packet to a connected client.
     /// </summary>
-    /// <remarks>
-    /// <para>This method resolves and verifies the validity of the client using the specified session id.</para>
-    /// <para>Internally calls <see cref="Send(IServerSession, IPacket)"/>.</para>
-    /// </remarks>
-    protected Task Send(string sessionId, IPacket packet);
-    
-    /// <summary>
-    /// Method to send a packet to a client.
-    /// </summary>
     /// <remarks>This method should only be used when session was acquired beforehand and was deemed valid.</remarks>
     protected Task Send(IServerSession session, IPacket packet);
     

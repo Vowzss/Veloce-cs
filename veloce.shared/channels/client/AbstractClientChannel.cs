@@ -7,10 +7,11 @@ namespace veloce.shared.channels.client;
 
 public abstract class AbstractClientChannel : AbstractChannel<IClientPacketInterceptor>, IClientChannel
 {
-    public EncryptionContext? Encryption { get; init; }
+    public EncryptionContext? Encryption { get; }
 
     protected AbstractClientChannel(IPEndPoint endPoint) : base(endPoint, false)
     {
+        Encryption = new EncryptionContext();
     }
 
     public async Task Send(IPacket packet)
@@ -27,9 +28,9 @@ public abstract class AbstractClientChannel : AbstractChannel<IClientPacketInter
     }
 }
 
-public sealed class DefaultClientChannel : AbstractClientChannel
+public sealed class VeloceClientChannel : AbstractClientChannel
 {
-    public DefaultClientChannel(IPEndPoint endPoint) : base(endPoint)
+    public VeloceClientChannel(IPEndPoint endPoint) : base(endPoint)
     {
     }
 

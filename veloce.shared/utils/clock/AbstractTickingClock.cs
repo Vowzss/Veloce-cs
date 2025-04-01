@@ -5,21 +5,24 @@ namespace veloce.shared.utils;
 
 public abstract class AbstractTickingClock : ITickingClock
 {
+    public int TickRate { get; }
+    
     public event TickEvent OnTick;
     public event TickMissedEvent OnTickMissed;
     
     /// <summary>
-    /// Represents the time interval at which the clock must tick.
+    /// Represents the time interval at which the clock must tick <c>in ms</c>.
     /// </summary>
     protected readonly int TickInterval;
     
     protected readonly CancellationToken Token;
     protected readonly Stopwatch Stopwatch;
     
-    protected AbstractTickingClock(int tickInterval, CancellationToken token)
+    protected AbstractTickingClock(int tickRate, CancellationToken token)
     {
-        TickInterval = tickInterval;
+        TickRate = tickRate;
         
+        TickInterval = 1000 / tickRate;
         Token = token;
         Stopwatch = new Stopwatch();
     }

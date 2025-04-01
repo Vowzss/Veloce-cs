@@ -36,7 +36,7 @@ public abstract class AbstractServerChannel : AbstractChannel<IServerPacketInter
         _token = Signal.Token;
         
         // Setup ticking clock
-        _clock = new ServerTickingClock(Config.TickInterval, _token);
+        _clock = new ServerTickingClock(Config.TickRate, _token);
         _clock.OnTick += () => OnTick?.Invoke();
         _clock.OnTickMissed += time => OnTickMissed?.Invoke(time);
         
@@ -120,7 +120,7 @@ public abstract class AbstractServerChannel : AbstractChannel<IServerPacketInter
             {
                 while (_queue.TryDequeue(out var rs))
                 {
-                    var session = SessionHandler.Get(rs.RemoteEndPoint.ToString());
+                    var session = SessionHandler.FindByEndpoint(rs.RemoteEndPoint);
                     var args = new DataReceiveArgs(rs.RemoteEndPoint, rs.Buffer);
                     PacketInterceptor.Accept(args, session?.Encryption);
                 }
@@ -133,31 +133,15 @@ public abstract class AbstractServerChannel : AbstractChannel<IServerPacketInter
         }
     }
     
-    public async Task Send(string sessionId, IPacket packet)
-    {
-        // TODO: find a better way to do so
-        if (packet is not IHandshakePacket)
-        {
-            var session = SessionHandler.Get(sessionId);
-            if (session == null)
-            {
-                Logger.Warning($"Attempt to send '{packet.Identifier}' packet to unknown session ID:{sessionId}.");
-                return;
-            }
-        
-            if (session.Status != ClientStatus.Connected)
-            {
-                Logger.Warning($"Cancelled '{packet.Identifier}' packet due to unstable session ID:{sessionId}.");
-                return;
-            }
-        }
-        
-        await Send(session, packet);
-    }
-
     public async Task Send(IServerSession session, IPacket packet)
     {
         Logger.Information($"Sending '{packet.Identifier}' packet to client ID:{session.Id}.");
+        
+        if (session.Status != ClientStatus.Connected)
+        {
+            Logger.Warning($"Cancelled '{packet.Identifier}' packet due to unstable session ID:{session.Id}.");
+            return;
+        }
         
         try
         {
@@ -174,14 +158,14 @@ public abstract class AbstractServerChannel : AbstractChannel<IServerPacketInter
     {
         Logger.Information($"Broadcasting '{packet.Identifier}' packet to connected clients.");
         
-        foreach (var session in SessionHandler.Sessions.Values)
+        foreach (var session in SessionHandler.GetAll())
             await Send(session, packet);
     }
 }
 
-public sealed class DefaultServerChannel : AbstractServerChannel
+public sealed class VeloceServerChannel : AbstractServerChannel
 {
-    public DefaultServerChannel(IPEndPoint endPoint, IServerConfig config) : base(endPoint, config)
+    public VeloceServerChannel(IPEndPoint endPoint, IServerConfig config) : base(endPoint, config)
     {
     }
 
@@ -191,26 +175,28 @@ public sealed class DefaultServerChannel : AbstractServerChannel
         
         PacketInterceptor.OnHandshake += async args =>
         {
-            // TODO: account for custom sessionId
-            var sessionId = args.Sender.ToString();
             var packet = args.Packet as IHandshakePacket;
+            var session = SessionHandler.FindByEndpoint(args.Sender) 
+                          ?? SessionHandler.Register(args.Sender);
             
             switch (packet!.Step)
             {
                 case HandshakeStep.PublicKey:
-                    await Send(sessionId, new VeloceHandshakePacket
+                    await Send(session, new VeloceHandshakePacket
                     {
                         Key = Config.GetPublicKey(),
                         Step = HandshakeStep.PublicKey
                     });
                     break;
                 case HandshakeStep.AesKey:
-                    await Send(sessionId, new VeloceHandshakePacket
+                    session.Encryption.LoadAesKey(Config.Rsa, packet.Key!);
+                    await Send(session, new VeloceHandshakePacket
                     {
-                        Key = null,
                         Step = HandshakeStep.AesKey
                     });
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         };
         

@@ -30,10 +30,10 @@ public interface IPacketInterceptor
     /// <summary>
     /// Non-blocking method to resolve packet from data.
     /// </summary>
-    protected internal void Accept(DataReceiveArgs args, EncryptionContext? encryption);
+    protected internal bool Accept(DataReceiveArgs args, EncryptionContext? encryption);
     
     /// <summary>
     /// Non-blocking method to process custom packets.
     /// </summary>
-    protected internal void Handle(IEventPacketArgs args);
+    protected internal bool Handle(IEventPacketArgs args);
 }

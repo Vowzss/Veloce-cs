@@ -14,17 +14,17 @@ public abstract class AbstractPacketSerializer : AbstractPacketHandler, IPacketS
 
         // Case when packets cannot be secured
         // e.g. during handshake
-        if (!encryption.HasValue)
+        if (encryption == null)
             return rawData;
         
         // Encrypt data
-        using var encryptor = encryption.Value.GetEncryptor();
+        using var encryptor = encryption.GetEncryptor();
         using var ms = new MemoryStream();
         using var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
         cs.Write(rawData, 0, rawData.Length);
         cs.FlushFinalBlock();
         
-        return encryption.Value.CopyIv(ms.ToArray());
+        return encryption.CopyIv(ms.ToArray());
     }
 }
 

@@ -13,12 +13,6 @@ public interface IServerConfig
     public int TickRate { get; }
     
     /// <summary>
-    /// Represents the server's ticking interval.
-    /// </summary>
-    /// <remarks>This value should be <c>in ms</c> and dependent on <see cref="TickRate"/>.</remarks>
-    public int TickInterval { get; }
-    
-    /// <summary>
     /// Represents the amount of concurrent tasks that can process incoming packets.
     /// </summary>
     /// <remarks>This value is set by default to <see cref="Environment.ProcessorCount"/>.</remarks>
@@ -45,7 +39,7 @@ public interface IServerConfig
     /// <summary>
     /// Represents the server's rsa instance.
     /// </summary>
-    protected RSA Rsa { get; }
+    public RSA Rsa { get; }
     
     /// <summary>
     /// Represents the server's rsa public key.

@@ -8,7 +8,7 @@ namespace veloce.shared.packets;
 public abstract class AbstractHandshakePacket : AbstractPacket, IHandshakePacket
 {
     [ProtoMember(3)]
-    public required byte[] Key { get; init; } = null!;
+    public byte[]? Key { get; init; }
     
     [ProtoMember(4)]
     public required HandshakeStep Step { get; init; }
@@ -16,9 +16,8 @@ public abstract class AbstractHandshakePacket : AbstractPacket, IHandshakePacket
     // Protobuf serialization
     protected AbstractHandshakePacket() { }
 
-    protected AbstractHandshakePacket(byte[] key, HandshakeStep step)
+    protected AbstractHandshakePacket(HandshakeStep step)
     {
-        Key = key;
         Step = step;
     }
 }

@@ -5,7 +5,7 @@ namespace veloce.shared.models;
 /// <summary>
 /// Represents an object containing end-to-end encryption values.
 /// </summary>
-public struct EncryptionContext(byte[] rsaKey, byte[] aesKey)
+public sealed class EncryptionContext
 {
     /// <summary>
     /// AES specification (FIPS PUB 197)
@@ -16,22 +16,33 @@ public struct EncryptionContext(byte[] rsaKey, byte[] aesKey)
     /// <summary>
     /// Represents the aes algorithm instance.
     /// </summary>
-    private Aes Aes { get;} = Aes.Create();
-    
-    /// <summary>
-    /// Represents the rsa public key.
-    /// </summary>
-    private byte[] RsaKey { get;} = rsaKey;
+    private Aes Aes { get; }
 
     /// <summary>
     /// Represents the symmetric encryption key.
     /// </summary>
-    private byte[] AesKey { get; } = aesKey;
+    private byte[]? AesKey { get; set; }
     
     /// <summary>
-    /// Represents the randomness value for encryption.
+    /// Represents the randomness value for secure encryption/decryption.
     /// </summary>
-    public byte[] AesIv { get; private set; }
+    /// <remarks>
+    /// <para>This value is generated for each serialization to ensure data integrity.</para>
+    /// <para>During deserialization, it must always match the value used to serialize the data.</para>
+    /// </remarks>
+    private byte[]? AesIv { get; set; }
+
+    public EncryptionContext()
+    {
+        Aes = Aes.Create();
+        Aes.Mode = CipherMode.CBC;
+        Aes.Padding = PaddingMode.PKCS7;
+    }
+
+    /// <summary>
+    /// Returns whether the context was correctly initialized.
+    /// </summary>
+    public bool IsValid() => AesKey != null;
 
     /// <summary>
     /// Method to create an object for encryption.
@@ -40,19 +51,23 @@ public struct EncryptionContext(byte[] rsaKey, byte[] aesKey)
     public ICryptoTransform GetEncryptor()
     {
         Aes.GenerateIV();
-        //AesIv = Aes.IV;
-        return Aes.CreateEncryptor(AesKey, Aes.IV);
+        AesIv = Aes.IV;
+        return Aes.CreateEncryptor(AesKey!, AesIv);
     }
     
     /// <summary>
     /// Method to create an object for decryption. 
     /// </summary>
     /// <remarks>The <c>iv</c> parameter must match the value that serialized the data in the first place.</remarks>
-    public ICryptoTransform GetDecryptor(byte[] iv) => Aes.CreateDecryptor(AesKey, iv);
+    public ICryptoTransform GetDecryptor()
+    {
+        return Aes.CreateDecryptor(AesKey!, AesIv);
+    }
     
     /// <summary>
     /// Method to read the iv at the beginning of the data for deserialization.
     /// </summary>
+    /// <remarks>This method must be called upon receiving data.</remarks>
     public void LoadIv(byte[] data)
     {
         var iv = new byte[AesIvLength];
@@ -67,13 +82,19 @@ public struct EncryptionContext(byte[] rsaKey, byte[] aesKey)
     /// <summary>
     /// Method to copy the iv at the beginning of the data for later deserialization.
     /// </summary>
+    /// <remarks>This method must be called upon sending data.</remarks>
     public byte[] CopyIv(byte[] data)
     {
         var result = new byte[AesIvLength + data.Length];
         
-        Array.Copy(AesIv, 0, result, 0, AesIvLength);
+        Array.Copy(AesIv!, 0, result, 0, AesIvLength);
         Array.Copy(data, 0, result, AesIvLength, data.Length);
         
         return result;
+    }
+
+    public void LoadAesKey(RSA rsa, byte[] key)
+    {
+        AesKey = rsa.Decrypt(key, RSAEncryptionPadding.OaepSHA256);
     }
 }
