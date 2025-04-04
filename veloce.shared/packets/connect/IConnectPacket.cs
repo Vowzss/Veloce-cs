@@ -1,5 +1,4 @@
 ﻿using ProtoBuf;
-using veloce.shared.attributes;
 
 namespace veloce.shared.packets;
 

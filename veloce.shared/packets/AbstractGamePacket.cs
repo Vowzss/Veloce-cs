@@ -1,24 +1,20 @@
 ﻿using ProtoBuf;
-using veloce.shared.attributes;
 
 namespace veloce.shared.packets;
 
 [ProtoContract]
 public abstract class AbstractGamePacket : AbstractPacket, IGamePacket
 {
-    [ProtoMember(3)]
-    public string ClientIdentifier { get; init; } = null!;
-    
-    // Protobuf serialization
-    protected AbstractGamePacket() { }
+    [ProtoMember(3)] 
+    public string PlayerId { get; init; }
 
-    protected AbstractGamePacket(string playerId) : base()
+    protected AbstractGamePacket(string playerId)
     {
-        ClientIdentifier = playerId;
+        PlayerId = playerId;
     }
 
     public override string ToString()
     {
-        return $"Identifier:[{Identifier}] - Player:[{ClientIdentifier}] - Timestamp:[{Timestamp}]";
+        return $"{base.ToString()} - Player:[{PlayerId}]";
     }
 }

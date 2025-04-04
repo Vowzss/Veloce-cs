@@ -6,5 +6,5 @@ public enum ClientStatus
     Connecting,
     Disconnected,
     Reconnecting,
-    Connected,
+    Connected
 }

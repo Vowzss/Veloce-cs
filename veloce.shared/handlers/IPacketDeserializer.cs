@@ -4,12 +4,12 @@ using veloce.shared.packets;
 namespace veloce.shared.handlers;
 
 /// <summary>
-/// Represents an object for secure packet deserialization.
+///     Represents an object for secure packet deserialization.
 /// </summary>
-public interface IPacketDeserializer : IPacketHandler
+public interface IPacketDeserializer
 {
     /// <summary>
-    /// Method to transform a binary format into a packet.
+    ///     Method to transform a binary format into a packet.
     /// </summary>
-    public IPacket Read(byte[] data, EncryptionContext? encryption);
+    public IPacket Read(byte[] data, IEncryptionContext encryption);
 }

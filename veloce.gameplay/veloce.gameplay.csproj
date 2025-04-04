@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\veloce.shared\veloce.shared.csproj"/>
+    </ItemGroup>
+
 </Project>

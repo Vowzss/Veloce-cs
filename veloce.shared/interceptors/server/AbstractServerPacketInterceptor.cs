@@ -22,54 +22,43 @@ public abstract class AbstractServerPacketInterceptor : IServerPacketInterceptor
     {
         Deserializer = deserializer;
     }
-    
-    public bool Accept(DataReceiveArgs args, EncryptionContext? encryption)
+
+    public void Accept(DataReceiveArgs args, IEncryptionContext encryption)
     {
         // Deserialize packet
         var packet = Deserializer.Read(args.Data, encryption);
         
-        // Edge case: no encryption means the packet must be a handshake
-        if (encryption == null || !encryption.IsValid())
-        {
-            if (packet is not IHandshakePacket) return false;
-            OnHandshake.Invoke(new HandshakeEventArgs(args.Sender, (IHandshakePacket)packet));
-            return true;
-        }
-        
         // Match against default packets
         switch (packet)
         {
+            case IHandshakePacket p:
+                OnHandshake.Invoke(new HandshakeEventArgs(args.Sender, p));
+                break;
+            
             case IHeartbeatPacket p:
                 OnHeartbeat.Invoke(new HeartbeatEventArgs(args.Sender, p));
-                return true;
-            
+                break;
+
             case IConnectPacket p:
                 OnConnect.Invoke(new ConnectEventArgs(args.Sender, p));
-                return true;
-           
+                break;
+
             case IDisconnectPacket p:
                 OnDisconnect.Invoke(new DisconnectEventArgs(args.Sender, p));
-                return true;
-           
+                break;
+
             case IReconnectPacket p:
                 OnReconnect.Invoke(new ReconnectEventArgs(args.Sender, p));
-                return true;
-            
+                break;
+
             default:
-                return Handle(new EventPacketArgs(args.Sender, packet));
+                Handle(new EventPacketArgs(args.Sender, packet));
+                break;
         }
     }
 
-    public virtual bool Handle(IEventPacketArgs args)
+    public virtual void Handle(IEventPacketArgs args)
     {
-        return false;
-    }
-}
-
-public sealed class DefaultServerPacketInterceptor : AbstractServerPacketInterceptor
-{
-    public DefaultServerPacketInterceptor(IPacketDeserializer deserializer) : base(ref deserializer)
-    {
-        
+        return;
     }
 }

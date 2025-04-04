@@ -6,5 +6,5 @@ namespace veloce.shared.packets;
 [ProtoContract]
 public interface IHeartbeatPacket : IGamePacket
 {
-    protected internal HeartbeatStep Step { get; }
+    protected HeartbeatStep Step { get; }
 }

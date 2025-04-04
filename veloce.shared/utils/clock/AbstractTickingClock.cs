@@ -6,27 +6,23 @@ namespace veloce.shared.utils;
 public abstract class AbstractTickingClock : ITickingClock
 {
     public int TickRate { get; }
-    
+
     public event TickEvent OnTick;
     public event TickMissedEvent OnTickMissed;
     
-    /// <summary>
-    /// Represents the time interval at which the clock must tick <c>in ms</c>.
-    /// </summary>
     protected readonly int TickInterval;
-    
     protected readonly CancellationToken Token;
     protected readonly Stopwatch Stopwatch;
     
     protected AbstractTickingClock(int tickRate, CancellationToken token)
     {
         TickRate = tickRate;
-        
+
         TickInterval = 1000 / tickRate;
         Token = token;
         Stopwatch = new Stopwatch();
     }
-    
+
     public virtual async Task Tick()
     {
         Stopwatch.Start();
@@ -43,14 +39,14 @@ public abstract class AbstractTickingClock : ITickingClock
                 {
                     // Tick was missed
                     var remainingTime = TickInterval - elapsedTime;
-                    
+
                     // Determine weather tick was missed or in time but need re-sync
                     if (remainingTime < 0) OnTickMissed.Invoke(elapsedTime);
                     else await Task.Delay((int)remainingTime, Token);
-                    
+
                     return;
                 }
-                
+
                 lastTickTime = currentTime;
                 OnTick.Invoke();
             }

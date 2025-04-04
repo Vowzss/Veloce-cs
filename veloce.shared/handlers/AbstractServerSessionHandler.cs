@@ -6,17 +6,17 @@ namespace veloce.shared.handlers;
 
 public abstract class AbstractServerSessionHandler : IServerSessionHandler
 {
-    public IDictionary<string, IServerSession> Sessions { get; }
-    
     protected AbstractServerSessionHandler()
     {
         Sessions = new ConcurrentDictionary<string, IServerSession>();
     }
-    
-    public abstract IServerSession Register(IPEndPoint endpoint);
-    
+
+    public IDictionary<string, IServerSession> Sessions { get; }
+
+    public abstract IServerSession? Register(IPEndPoint endpoint);
+
     public abstract string ComputeId(IPEndPoint endpoint);
-    
+
     public IServerSession? FindById(string sessionId)
     {
         Sessions.TryGetValue(sessionId, out var session);
@@ -28,18 +28,8 @@ public abstract class AbstractServerSessionHandler : IServerSessionHandler
         return FindById(ComputeId(endpoint));
     }
 
-    public IList<IServerSession> GetAll() => Sessions.Values.ToList();
-}
-
-public sealed class DefaultServerSessionHandler : AbstractServerSessionHandler
-{
-    public override IServerSession Register(IPEndPoint endpoint)
+    public IList<IServerSession> GetAll()
     {
-        return new VeloceServerSession(endpoint, ComputeId(endpoint));
-    }
-
-    public override string ComputeId(IPEndPoint endpoint)
-    {
-        return endpoint.ToString();
+        return Sessions.Values.ToList();
     }
 }

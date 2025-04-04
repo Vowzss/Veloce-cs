@@ -6,5 +6,5 @@ public enum ServerStatus
     Starting,
     Online,
     Stopping,
-    Offline,
+    Offline
 }

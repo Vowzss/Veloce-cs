@@ -6,7 +6,7 @@ namespace veloce.shared.packets;
 [ProtoContract]
 public interface IHandshakePacket : IPacket
 {
-    protected internal byte[]? Key { get; }
+    public byte[]? Key { get; }
 
-    protected internal HandshakeStep Step { get; }
+    public HandshakeStep Step { get; }
 }

@@ -5,7 +5,7 @@ using veloce.shared.packets;
 namespace veloce.shared.utils;
 
 /// <summary>
-/// Represents an object containing the ordered packet hierarchy.
+///     Represents an object containing the ordered packet hierarchy.
 /// </summary>
 internal sealed class HierarchyNode
 {
@@ -15,7 +15,7 @@ internal sealed class HierarchyNode
 }
 
 /// <summary>
-/// Represents an object containing the packet abstract hierarchy with its concrete implementations if many.
+///     Represents an object containing the packet abstract hierarchy with its concrete implementations if many.
 /// </summary>
 internal sealed class PacketNode
 {
@@ -24,35 +24,39 @@ internal sealed class PacketNode
 }
 
 /// <summary>
-/// A utility class for resolving and building packet hierarchies for protobuf serialization.
+///     A utility class for resolving and building packet hierarchies for protobuf serialization.
 /// </summary>
 internal static class PacketResolver
 {
     /// <summary>
-    /// A utility method to collect concrete packet implementation within the assembly.
+    ///     A utility method to collect concrete packet implementation within the assembly.
     /// </summary>
-    /// <remarks>Only packets decorated with the following attribute: <see cref="PacketIdentifierAttribute"/> will be recognized.</remarks>
+    /// <remarks>
+    ///     Only packets decorated with the following attribute: <see cref="PacketIdentifierAttribute" /> will be
+    ///     recognized.
+    /// </remarks>
     internal static List<Type> Resolve(Assembly assembly)
     {
         return assembly.GetTypes()
             .Where(t => t.GetCustomAttribute<PacketIdentifierAttribute>() != null)
             .ToList();
     }
-    
+
     /// <summary>
-    /// A utility method to build a class dependency tree of packets based on their inheritance schema.
+    ///     A utility method to build a class dependency tree of packets based on their inheritance schema.
     /// </summary>
     internal static HierarchyNode BuildHierarchy(List<Type> types)
     {
         var nodes = types
             .GroupBy(x => x.BaseType)
             .ToList()
-            .Select(x => new PacketNode {
-                AbstractList = GetBaseTypes(x.First()).Reverse().ToList(), 
+            .Select(x => new PacketNode
+            {
+                AbstractList = GetBaseTypes(x.First()).Reverse().ToList(),
                 ConcreteList = x.ToList()
             })
             .ToList();
-        
+
         HierarchyNode? rootNode = null;
         var lookup = new Dictionary<Type, HierarchyNode>();
 
@@ -76,12 +80,12 @@ internal static class PacketResolver
 
             parentNode?.ConcreteList.AddRange(node.ConcreteList);
         }
-        
+
         return rootNode!;
     }
-    
+
     /// <summary>
-    /// A utility method to retrieve all base types of a given packet, including custom ones.
+    ///     A utility method to retrieve all base types of a given packet, including custom ones.
     /// </summary>
     private static IEnumerable<Type> GetBaseTypes(Type type)
     {

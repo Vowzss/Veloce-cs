@@ -5,12 +5,12 @@ namespace veloce.shared.events;
 
 public abstract class AbstractEventPacketArgs : AbstractEventArgs, IEventPacketArgs
 {
-    public IPacket Packet { get; }
-
     public AbstractEventPacketArgs(IPEndPoint sender, IPacket packet) : base(sender)
     {
         Packet = packet;
     }
+
+    public IPacket Packet { get; }
 }
 
 public sealed class EventPacketArgs : AbstractEventPacketArgs

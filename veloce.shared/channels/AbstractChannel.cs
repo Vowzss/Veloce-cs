@@ -1,44 +1,69 @@
-﻿using System.Net;
+﻿using System.Collections.Concurrent;
+using System.Net;
 using System.Net.Sockets;
 using Serilog;
-using veloce.shared.events;
 using veloce.shared.handlers;
 using veloce.shared.interceptors;
-using veloce.shared.packets;
-using veloce.shared.utils;
+using veloce.shared.models;
 
 namespace veloce.shared.channels;
 
-public abstract class AbstractChannel<TPacketInterceptor> : IChannel<TPacketInterceptor>
+public abstract class AbstractChannel<TChannelConfig, TPacketInterceptor> : IChannel<TChannelConfig, TPacketInterceptor>
+    where TChannelConfig : IChannelConfig
     where TPacketInterceptor : IPacketInterceptor
 {
-    public ILogger Logger { get; }
-    
-    public bool HasAuthority { get; }
-    public IPEndPoint EndPoint { get; }
-    
-    public CancellationTokenSource Signal { get; }
-    
-    public IPacketSerializer Serializer { get; init; }
-    public IPacketDeserializer Deserializer { get; init; }
-    
-    public required TPacketInterceptor PacketInterceptor { get; init;  }
-    
     protected UdpClient Transport { get; }
     
-    protected AbstractChannel(IPEndPoint endPoint, bool hasAuthority = false)
+    public ILogger Logger { get; }
+    
+    public TChannelConfig Config { get; }
+    public IPEndPoint EndPoint { get; }
+    public bool HasAuthority { get; }
+
+    public TPacketInterceptor PacketInterceptor { get; protected init; }
+    public IPacketSerializer Serializer { get; protected init; }
+    public IPacketDeserializer Deserializer { get; protected init; }
+    
+    public CancellationTokenSource Signal { get; }
+    public CancellationToken Token { get; }
+    
+    public ConcurrentQueue<UdpReceiveResult> Queue { get; }
+    public SemaphoreSlim Semaphore { get; protected set; }
+    public List<Task> Workers { get; protected set; }
+
+    protected AbstractChannel(IPEndPoint endPoint, TChannelConfig config , bool hasAuthority)
     {
         Logger = new LoggerConfiguration()
             .WriteTo.Console()
             .CreateLogger();
         
-        HasAuthority = hasAuthority;
+        Config = config;
         EndPoint = endPoint;
+        HasAuthority = hasAuthority;
+        
+        // Setup signalling values
         Signal = new CancellationTokenSource();
+        Token = Signal.Token;
+        
+        // Setup processing values
+        Queue = new ConcurrentQueue<UdpReceiveResult>();
+        Semaphore = new SemaphoreSlim(1, 1);
+        Workers = Enumerable
+            .Range(0, config.MaxWorkerCount)
+            .Select(_ => Task.Run(Process, Token))
+            .ToList();
         
         try
         {
-            Transport = hasAuthority ? new UdpClient(EndPoint) : new UdpClient();
+            if (hasAuthority)
+            {
+                Transport = new UdpClient(EndPoint);
+            }
+            else
+            {
+                Transport = new UdpClient();
+                Transport.Client.Bind(new IPEndPoint(IPAddress.Any, 0));
+            }
         }
         catch (SocketException e)
         {
@@ -47,5 +72,9 @@ public abstract class AbstractChannel<TPacketInterceptor> : IChannel<TPacketInte
         }
     }
 
+    public abstract Task Listen();
+
     public abstract Task Process();
+
+    public virtual bool IsShuttingDown() => Token.IsCancellationRequested;
 }
