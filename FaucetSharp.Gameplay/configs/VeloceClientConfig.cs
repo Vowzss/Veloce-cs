@@ -2,9 +2,9 @@
 
 namespace FaucetSharp.Gameplay.configs;
 
-public sealed class VeloceClientConfig : AbstractClientConfig
+public sealed class FaucetClientConfig : AbstractClientConfig
 {
-    public VeloceClientConfig(Guid playerId) : base(playerId)
+    public FaucetClientConfig(Guid playerId) : base(playerId)
     {
 
     }

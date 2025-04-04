@@ -5,9 +5,9 @@ namespace FaucetSharp.Shared.packets;
 
 [ProtoContract]
 [PacketIdentifier("veloce.pkt.heartbeat")]
-public sealed class VeloceHeartbeatPacket : AbstractHeartbeatPacket
+public sealed class FaucetHeartbeatPacket : AbstractHeartbeatPacket
 {
-    public VeloceHeartbeatPacket(string playerId) : base(playerId)
+    public FaucetHeartbeatPacket(string playerId) : base(playerId)
     {
     }
 }

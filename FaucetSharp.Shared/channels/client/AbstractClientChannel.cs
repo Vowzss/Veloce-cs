@@ -21,7 +21,7 @@ public abstract class AbstractClientChannel : AbstractChannel<IClientConfig, ICl
         Logger.Information("Connecting...");
         Task.Run(Listen, Token);
         
-        return Send(new VeloceHandshakePacket {
+        return Send(new FaucetHandshakePacket {
             Step = HandshakeStep.PublicKey
         });
     }

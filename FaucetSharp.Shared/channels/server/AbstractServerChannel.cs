@@ -24,7 +24,7 @@ public abstract class AbstractServerChannel : AbstractChannel<IServerConfig, ISe
     protected AbstractServerChannel(IPEndPoint endPoint, IServerConfig config) : base(endPoint, config,true)
     {
         // Setup ticking clock
-        Clock = new VeloceTickingClock(config.TickRate, Token);
+        Clock = new FaucetTickingClock(config.TickRate, Token);
         Clock.OnTick += () => OnTick?.Invoke();
         Clock.OnTickMissed += time => OnTickMissed?.Invoke(time);
     }

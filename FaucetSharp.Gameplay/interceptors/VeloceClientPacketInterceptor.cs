@@ -3,9 +3,9 @@ using FaucetSharp.Shared.interceptors.client;
 
 namespace FaucetSharp.Gameplay.interceptors;
 
-public sealed class VeloceClientPacketInterceptor : AbstractClientPacketInterceptor
+public sealed class FaucetClientPacketInterceptor : AbstractClientPacketInterceptor
 {
-    public VeloceClientPacketInterceptor(IPacketDeserializer deserializer) : base(ref deserializer)
+    public FaucetClientPacketInterceptor(IPacketDeserializer deserializer) : base(ref deserializer)
     {
     }
 }

@@ -2,9 +2,9 @@
 
 namespace FaucetSharp.Gameplay.configs;
 
-public sealed class VeloceServerConfig : AbstractServerConfig
+public sealed class FaucetServerConfig : AbstractServerConfig
 {
-    public VeloceServerConfig() : base(60)
+    public FaucetServerConfig() : base(60)
     {
         ClientReconnectTimeout = TimeSpan.FromSeconds(120);
     }

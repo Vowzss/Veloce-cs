@@ -2,6 +2,6 @@
 
 namespace FaucetSharp.Gameplay.handlers;
 
-public sealed class VelocePacketDeserializer : AbstractPacketDeserializer
+public sealed class FaucetPacketDeserializer : AbstractPacketDeserializer
 {
 }

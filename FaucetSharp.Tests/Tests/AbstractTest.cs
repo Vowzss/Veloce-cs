@@ -30,8 +30,8 @@ public abstract class AbstractTest
     protected AbstractTest()
     {
         var endpoint = new IPEndPoint(IPAddress.Loopback, 52512);
-        var serverConfig = new VeloceServerConfig();
-        var clientConfig = new VeloceClientConfig(Guid.NewGuid());
+        var serverConfig = new FaucetServerConfig();
+        var clientConfig = new FaucetClientConfig(Guid.NewGuid());
         
         Logger = new LoggerConfiguration()
             .WriteTo.Console(
@@ -39,11 +39,11 @@ public abstract class AbstractTest
             .CreateLogger();
 
         // Create a server
-        Server = new VeloceServerChannel(endpoint, serverConfig);
+        Server = new FaucetServerChannel(endpoint, serverConfig);
         Server.Start().Wait();
 
         // Create a client
-        Client = new VeloceClientChannel(endpoint, clientConfig);
+        Client = new FaucetClientChannel(endpoint, clientConfig);
         Client.Connect().Wait();
     }
 

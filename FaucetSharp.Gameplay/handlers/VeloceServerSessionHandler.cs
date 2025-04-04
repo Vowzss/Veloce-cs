@@ -6,11 +6,11 @@ using FaucetSharp.Shared.models;
 
 namespace FaucetSharp.Gameplay.handlers;
 
-public sealed class VeloceServerSessionHandler : AbstractServerSessionHandler
+public sealed class FaucetServerSessionHandler : AbstractServerSessionHandler
 {
     public override IServerSession? Register(IPEndPoint endpoint)
     {
-        var session = new VeloceServerSession(endpoint, ComputeId(endpoint));
+        var session = new FaucetServerSession(endpoint, ComputeId(endpoint));
         if (!Sessions.TryAdd(session.Id, session)) throw new SessionCreationException();
         return session;
     }

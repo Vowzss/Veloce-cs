@@ -9,13 +9,13 @@ using FaucetSharp.Shared.packets;
 
 namespace FaucetSharp.Gameplay.channels;
 
-public sealed class VeloceServerChannel : AbstractServerChannel
+public sealed class FaucetServerChannel : AbstractServerChannel
 {
-    public VeloceServerChannel(IPEndPoint endPoint, IServerConfig config) : base(endPoint, config)
+    public FaucetServerChannel(IPEndPoint endPoint, IServerConfig config) : base(endPoint, config)
     {
-        Serializer = new VelocePacketSerializer();
-        PacketInterceptor = new VeloceServerPacketInterceptor(new VelocePacketDeserializer());
-        SessionHandler = new VeloceServerSessionHandler();
+        Serializer = new FaucetPacketSerializer();
+        PacketInterceptor = new FaucetServerPacketInterceptor(new FaucetPacketDeserializer());
+        SessionHandler = new FaucetServerSessionHandler();
         
         // Bind default handshake callback
         PacketInterceptor.OnHandshake += async args =>
@@ -28,7 +28,7 @@ public sealed class VeloceServerChannel : AbstractServerChannel
             switch (packet!.Step)
             {
                 case HandshakeStep.PublicKey:
-                    await Send(session, new VeloceHandshakePacket
+                    await Send(session, new FaucetHandshakePacket
                     {
                         Key = Config.Rsa.ExportRSAPublicKey(),
                         Step = HandshakeStep.Establishing
@@ -36,7 +36,7 @@ public sealed class VeloceServerChannel : AbstractServerChannel
                     break;
                 case HandshakeStep.AesKey:
                     session.Encryption.LoadAesKey(Config.Rsa, packet.Key!);
-                    await Send(session, new VeloceHandshakePacket
+                    await Send(session, new FaucetHandshakePacket
                     {
                         Step = HandshakeStep.Established
                     });

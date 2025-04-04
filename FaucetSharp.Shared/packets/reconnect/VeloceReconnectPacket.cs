@@ -3,9 +3,9 @@
 namespace FaucetSharp.Shared.packets;
 
 [PacketIdentifier("veloce.pkt.reconnect")]
-public sealed class VeloceReconnectPacket : AbstractReconnectPacket
+public sealed class FaucetReconnectPacket : AbstractReconnectPacket
 {
-    public VeloceReconnectPacket(string playerId) : base(playerId)
+    public FaucetReconnectPacket(string playerId) : base(playerId)
     {
     }
 }

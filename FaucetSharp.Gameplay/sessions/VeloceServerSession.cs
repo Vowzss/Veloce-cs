@@ -3,10 +3,10 @@ using FaucetSharp.Shared.models;
 
 namespace FaucetSharp.Gameplay.encryption;
 
-public sealed class VeloceServerSession : AbstractServerSession
+public sealed class FaucetServerSession : AbstractServerSession
 {
-    public VeloceServerSession(IPEndPoint endPoint, string id) : base(endPoint, id)
+    public FaucetServerSession(IPEndPoint endPoint, string id) : base(endPoint, id)
     {
-        Encryption = new VeloceServerEncryption();
+        Encryption = new FaucetServerEncryption();
     }
 }

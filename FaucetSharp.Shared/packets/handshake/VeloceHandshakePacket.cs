@@ -5,6 +5,6 @@ namespace FaucetSharp.Shared.packets;
 
 [ProtoContract]
 [PacketIdentifier("veloce.pkt.handshake")]
-public sealed class VeloceHandshakePacket : AbstractHandshakePacket
+public sealed class FaucetHandshakePacket : AbstractHandshakePacket
 {
 }

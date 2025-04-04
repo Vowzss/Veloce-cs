@@ -2,6 +2,6 @@
 
 namespace FaucetSharp.Gameplay.encryption;
 
-public sealed class VeloceServerEncryption : AbstractServerEncryption
+public sealed class FaucetServerEncryption : AbstractServerEncryption
 {
 }
