@@ -25,10 +25,8 @@ public sealed class FaucetClientChannel : AbstractClientChannel
             switch (packet!.Step)
             {
                 case HandshakeStep.Establishing:
-                    await Send(new FaucetHandshakePacket
-                    {
-                        Key = Encryption.GenerateAesKey(packet.Key!),
-                        Step = HandshakeStep.AesKey
+                    await Send(new FaucetHandshakePacket(HandshakeStep.AesKey) {
+                        Key = Encryption.GenerateAesKey(packet.Key!)
                     });
                     break;
                 case HandshakeStep.Established:

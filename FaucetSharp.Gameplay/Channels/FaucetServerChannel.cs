@@ -30,18 +30,13 @@ public sealed class FaucetServerChannel : AbstractServerChannel
             switch (packet!.Step)
             {
                 case HandshakeStep.PublicKey:
-                    await Send(session, new FaucetHandshakePacket
-                    {
+                    await Send(session, new FaucetHandshakePacket(HandshakeStep.Establishing) {
                         Key = Config.Rsa.ExportRSAPublicKey(),
-                        Step = HandshakeStep.Establishing
                     });
                     break;
                 case HandshakeStep.AesKey:
                     session.Encryption.LoadAesKey(Config.Rsa, packet.Key!);
-                    await Send(session, new FaucetHandshakePacket
-                    {
-                        Step = HandshakeStep.Established
-                    });
+                    await Send(session, new FaucetHandshakePacket(HandshakeStep.Established));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

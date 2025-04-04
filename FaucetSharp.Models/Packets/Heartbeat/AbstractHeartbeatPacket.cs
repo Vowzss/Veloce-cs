@@ -6,9 +6,10 @@ namespace FaucetSharp.Models.Packets.Heartbeat;
 [ProtoContract]
 public abstract class AbstractHeartbeatPacket : AbstractGamePacket, IHeartbeatPacket
 {
-    public required HeartbeatStep Step { get; init; }
+    public HeartbeatStep Step { get; init; }
     
-    protected AbstractHeartbeatPacket(string playerId) : base(playerId)
+    protected AbstractHeartbeatPacket(string playerId, HeartbeatStep step) : base(playerId)
     {
+        Step = step;
     }
 }

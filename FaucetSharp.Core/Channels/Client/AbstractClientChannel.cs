@@ -23,9 +23,7 @@ public abstract class AbstractClientChannel : AbstractChannel<IClientConfig, ICl
         Logger.Information("Connecting...");
         Task.Run(Listen, Token);
         
-        return Send(new FaucetHandshakePacket {
-            Step = HandshakeStep.PublicKey
-        });
+        return Send(new FaucetHandshakePacket(HandshakeStep.PublicKey));
     }
 
     public Task Disconnect()
@@ -35,6 +33,15 @@ public abstract class AbstractClientChannel : AbstractChannel<IClientConfig, ICl
         Transport.Close();
         
         return Task.CompletedTask;
+    }
+
+    public async Task Heartbeat()
+    {
+        while (!IsShuttingDown())
+        {
+            await Send(new FaucetHeartbeatPacket(Config.PlayerId, HeartbeatStep.Ping));
+            await Task.Delay(Config.HeartbeatRate, Token);
+        }
     }
 
     public override async Task Listen()

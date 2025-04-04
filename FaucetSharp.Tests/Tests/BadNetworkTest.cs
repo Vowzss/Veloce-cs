@@ -45,11 +45,11 @@ public sealed class PacketLostTest : AbstractTest
         var tasks = packetQueue.Select(async item =>
         {
             await Task.Delay(item.Delay);
-            Client.Send(item.Packet);
+            await Client.Send(item.Packet);
         });
         await Task.WhenAll(tasks);
 
-        Stop();
+        await Stop();
         PrintSimulation();
     }
 

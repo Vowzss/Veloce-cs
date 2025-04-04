@@ -14,7 +14,7 @@ public static class PacketRegistry
 
     static PacketRegistry()
     {
-        // Load default packets within the library
+        // Load default concrete packets implementation within the library
         FindAndLoadPackets(Assembly.GetExecutingAssembly());
     }
 

@@ -31,7 +31,7 @@ public interface IEncryptionContext
     ///     <para>During deserialization, it must always match the value used to serialize the data.</para>
     /// </remarks>
     protected byte[]? AesIv { get; set; }
-
+    
     /// <summary>
     ///     Returns whether the context was correctly setup or not.
     /// </summary>

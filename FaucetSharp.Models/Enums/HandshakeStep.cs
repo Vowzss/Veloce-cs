@@ -2,6 +2,7 @@
 
 public enum HandshakeStep
 {
+    Unknown = 0,
     Establishing,
     PublicKey,
     AesKey,

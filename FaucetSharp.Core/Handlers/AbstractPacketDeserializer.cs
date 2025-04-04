@@ -13,6 +13,7 @@ public abstract class AbstractPacketDeserializer : IPacketDeserializer
 {
     public IPacket Read(byte[] data, IEncryptionContext encryption)
     {
+        // TODO: add a way to avoid deserialization test
         try
         {
             // Edge case: handshake packet is never encrypted

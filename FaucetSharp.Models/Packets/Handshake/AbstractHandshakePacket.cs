@@ -7,16 +7,11 @@ namespace FaucetSharp.Models.Packets.Handshake;
 public abstract class AbstractHandshakePacket : AbstractPacket, IHandshakePacket
 {
     [ProtoMember(3)] 
-    public byte[]? Key { get; init; }
-
-    [ProtoMember(4)] 
-    public required HandshakeStep Step { get; init; }
+    public HandshakeStep Step { get; init; }
     
-    // Protobuf serialization
-    protected AbstractHandshakePacket()
-    {
-    }
-
+    [ProtoMember(4)] 
+    public byte[]? Key { get; init; }
+    
     protected AbstractHandshakePacket(HandshakeStep step)
     {
         Step = step;

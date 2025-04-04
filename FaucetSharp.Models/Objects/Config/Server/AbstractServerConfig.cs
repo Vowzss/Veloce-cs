@@ -8,8 +8,8 @@ public abstract class AbstractServerConfig : AbstractChannelConfig, IServerConfi
     
     public int TickRate { get; protected init; }
     
-    public TimeSpan ClientTimeout { get; protected init; }
-    public TimeSpan? ClientReconnectTimeout { get; protected init; }
+    public TimeSpan MaxTimeout { get; protected init; }
+    public TimeSpan? MaxReconnectTimeout { get; protected init; }
     
     protected AbstractServerConfig(int tickRate)
     {
@@ -17,6 +17,6 @@ public abstract class AbstractServerConfig : AbstractChannelConfig, IServerConfi
         
         TickRate = tickRate;
         
-        ClientTimeout = TimeSpan.FromSeconds(20);
+        MaxTimeout = TimeSpan.FromSeconds(20);
     }
 }

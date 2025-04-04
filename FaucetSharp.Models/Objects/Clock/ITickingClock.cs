@@ -21,9 +21,14 @@ public interface ITickingClock
     ///     Event fired whenever the clock missed a tick.
     /// </summary>
     public event TickMissedEvent OnTickMissed;
-
+    
     /// <summary>
-    ///     Non-blocking method to start the clock;
+    ///     Non-blocking method to start the clock 
     /// </summary>
-    public Task Tick();
+    public void Start();
+    
+    /// <summary>
+    ///     Non-blocking method to make the clock tick;
+    /// </summary>
+    protected Task Tick();
 }

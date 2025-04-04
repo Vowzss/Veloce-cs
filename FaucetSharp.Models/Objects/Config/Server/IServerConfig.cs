@@ -21,11 +21,11 @@ public interface IServerConfig : IChannelConfig
     ///     Represents the duration before the client is flagged as disconnected.
     /// </summary>
     /// <remarks>This value is set by default to <c>20 seconds</c>.</remarks>
-    public TimeSpan ClientTimeout { get; }
+    public TimeSpan MaxTimeout { get; }
 
     /// <summary>
     ///     Represents the maximum duration before the client can reconnect.
     /// </summary>
     /// <remarks>Setting the value to <c>null</c> means the client can reconnect at any time.</remarks>
-    public TimeSpan? ClientReconnectTimeout { get; }
+    public TimeSpan? MaxReconnectTimeout { get; }
 }

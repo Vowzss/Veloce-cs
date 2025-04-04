@@ -15,7 +15,6 @@ public abstract class AbstractPacket : IPacket
     [ProtoMember(2)] 
     public long Timestamp { get; init; }
     
-    // Protobuf serialization
     protected AbstractPacket()
     {
         var attribute = GetType().GetCustomAttribute<PacketIdentifierAttribute>();

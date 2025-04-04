@@ -24,6 +24,12 @@ public interface IPacketInterceptor
     ///     Event fired whenever a heartbeat was received.
     /// </summary>
     public event HeartbeatEvent OnHeartbeat;
+    
+    public event ConnectEvent OnConnect;
+    
+    public event DisconnectEvent OnDisconnect;
+    
+    public event ReconnectEvent OnReconnect;
 
     /// <summary>
     ///     Non-blocking method to resolve packet from data.

@@ -30,6 +30,11 @@ public interface IClientChannel : IChannel<IClientConfig, IClientPacketIntercept
     ///     </remarks>
     /// </summary>
     public Task Disconnect();
+    
+    /// <summary>
+    ///     Non-blocking method to send a heartbeat packet to the server.
+    /// </summary>
+    public Task Heartbeat();
 
     /// <summary>
     ///     Non-blocking method to send a packet to a server.

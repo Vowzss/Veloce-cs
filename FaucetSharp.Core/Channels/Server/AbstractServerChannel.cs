@@ -38,7 +38,7 @@ public abstract class AbstractServerChannel : AbstractChannel<IServerConfig, ISe
         Status = ServerStatus.Starting;
 
         Task.Run(Listen, Token);
-        Task.Run(Clock.Tick, Token);
+        Clock.Start();
 
         Status = ServerStatus.Online;
         Logger.Information("Online!");
@@ -127,7 +127,7 @@ public abstract class AbstractServerChannel : AbstractChannel<IServerConfig, ISe
         
         try
         {
-            var data = Serializer.Write(packet, packet is IHandshakePacket ? null : session.Encryption);
+            var data = Serializer.Write(packet, session.Encryption);
             await Transport.SendAsync(data, data.Length, session.EndPoint);
         }
         catch (Exception ex)

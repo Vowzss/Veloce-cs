@@ -6,6 +6,6 @@ public sealed class FaucetServerConfig : AbstractServerConfig
 {
     public FaucetServerConfig() : base(60)
     {
-        ClientReconnectTimeout = TimeSpan.FromSeconds(120);
+        MaxReconnectTimeout = TimeSpan.FromSeconds(120);
     }
 }

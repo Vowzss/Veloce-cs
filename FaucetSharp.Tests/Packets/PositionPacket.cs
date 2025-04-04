@@ -28,7 +28,7 @@ public abstract class AbstractPositionPacket : AbstractGamePacket, IPositionPack
 }
 
 [ProtoContract]
-[PacketIdentifier("veloce.demo.pkt.position")]
+[PacketIdentifier("faucet.demo.pkt.position")]
 public sealed class PositionPacket : AbstractPositionPacket
 {
     public PositionPacket(string playerId, float x, float y, float z) : base(playerId)

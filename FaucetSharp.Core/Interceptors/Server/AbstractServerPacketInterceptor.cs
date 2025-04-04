@@ -16,12 +16,22 @@ public abstract class AbstractServerPacketInterceptor : IServerPacketInterceptor
     public IPacketDeserializer Deserializer { get; }
 
     public event HandshakeEvent OnHandshake;
-
-    public event ConnectEvent OnConnect;
-    public event DisconnectEvent OnDisconnect;
-    public event ReconnectEvent OnReconnect;
-
     public event HeartbeatEvent OnHeartbeat;
+    
+    /// <summary>
+    ///     Event fired whenever a client connects.
+    /// </summary>
+    public event ConnectEvent OnConnect;
+    
+    /// <summary>
+    ///     Event fired whenever a client disconnects.
+    /// </summary>
+    public event DisconnectEvent OnDisconnect;
+    
+    /// <summary>
+    ///     Event fired whenever a client reconnects.
+    /// </summary>
+    public event ReconnectEvent OnReconnect;
     
     protected AbstractServerPacketInterceptor(ref IPacketDeserializer deserializer)
     {

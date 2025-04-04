@@ -3,7 +3,7 @@
 namespace FaucetSharp.Models.Packets;
 
 /// <summary>
-///     Represents a secure data object for game communication.
+///     Represents a data object for game communication.
 /// </summary>
 public interface IGamePacket : IPacket
 {

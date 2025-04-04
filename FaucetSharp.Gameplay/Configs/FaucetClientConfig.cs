@@ -4,8 +4,8 @@ namespace FaucetSharp.Gameplay.Configs;
 
 public sealed class FaucetClientConfig : AbstractClientConfig
 {
-    public FaucetClientConfig(Guid playerId) : base(playerId)
+    public FaucetClientConfig(string playerId) : base(playerId)
     {
-
+        
     }
 }

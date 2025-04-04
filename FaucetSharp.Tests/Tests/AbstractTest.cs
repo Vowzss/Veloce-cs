@@ -28,7 +28,7 @@ public abstract class AbstractTest
     {
         var endpoint = new IPEndPoint(IPAddress.Loopback, 52512);
         var serverConfig = new FaucetServerConfig();
-        var clientConfig = new FaucetClientConfig(Guid.NewGuid());
+        var clientConfig = new FaucetClientConfig(Guid.NewGuid().ToString());
         
         Logger = new LoggerConfiguration()
             .WriteTo.Console(

@@ -23,6 +23,11 @@ public abstract class AbstractTickingClock : ITickingClock
         Stopwatch = new Stopwatch();
     }
 
+    public void Start()
+    {
+        Task.Run(Tick, Token);
+    }
+
     public virtual async Task Tick()
     {
         Stopwatch.Start();
