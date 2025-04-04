@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using FaucetSharp.Shared.handlers;
+using FaucetSharp.Core.Utils;
 using FaucetSharp.Tests.Tests;
 
 namespace FaucetSharp.Tests;

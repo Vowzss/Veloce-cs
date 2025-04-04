@@ -1,5 +1,4 @@
-﻿using FaucetSharp.Shared.enums;
-using FaucetSharp.Shared.packets;
+﻿
 
 namespace FaucetSharp.Tests.Tests;
 

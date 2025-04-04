@@ -17,7 +17,8 @@
 
     <ItemGroup>
         <ProjectReference Include="..\FaucetSharp.Gameplay\FaucetSharp.Gameplay.csproj" />
-        <ProjectReference Include="..\FaucetSharp.Shared\FaucetSharp.Shared.csproj" />
+        <ProjectReference Include="..\FaucetSharp.Core\FaucetSharp.Core.csproj" />
+        <ProjectReference Include="..\FaucetSharp.Models\FaucetSharp.Models.csproj" />
     </ItemGroup>
 
 </Project>

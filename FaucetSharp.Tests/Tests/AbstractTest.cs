@@ -1,12 +1,9 @@
 ﻿using System.Net;
 using Serilog;
 using FaucetSharp.Gameplay.channels;
-using FaucetSharp.Gameplay.configs;
-using FaucetSharp.Gameplay.handlers;
-using FaucetSharp.Gameplay.interceptors;
-using FaucetSharp.Shared.channels.client;
-using FaucetSharp.Shared.channels.server;
-using FaucetSharp.Shared.models;
+using FaucetSharp.Core.Channels.Client;
+using FaucetSharp.Core.Channels.Server;
+using FaucetSharp.Gameplay.Configs;
 
 namespace FaucetSharp.Tests.Tests;
 
