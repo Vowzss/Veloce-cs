@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaucetSharp.Shared", "FaucetSharp.Shared\FaucetSharp.Shared.csproj", "{8DEC7BC2-5762-4EAF-956E-3A7066967D54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaucetSharp.Tests", "FaucetSharp.Tests\FaucetSharp.Tests.csproj", "{3D2C39DC-1B6B-446F-B055-654735F84658}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaucetSharp.Gameplay", "FaucetSharp.Gameplay\FaucetSharp.Gameplay.csproj", "{839A4CD5-102F-41F0-BA9A-3421CE674948}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8DEC7BC2-5762-4EAF-956E-3A7066967D54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DEC7BC2-5762-4EAF-956E-3A7066967D54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DEC7BC2-5762-4EAF-956E-3A7066967D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DEC7BC2-5762-4EAF-956E-3A7066967D54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D2C39DC-1B6B-446F-B055-654735F84658}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D2C39DC-1B6B-446F-B055-654735F84658}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D2C39DC-1B6B-446F-B055-654735F84658}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D2C39DC-1B6B-446F-B055-654735F84658}.Release|Any CPU.Build.0 = Release|Any CPU
+		{839A4CD5-102F-41F0-BA9A-3421CE674948}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{839A4CD5-102F-41F0-BA9A-3421CE674948}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{839A4CD5-102F-41F0-BA9A-3421CE674948}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{839A4CD5-102F-41F0-BA9A-3421CE674948}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
